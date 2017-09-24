@@ -1,5 +1,9 @@
 modhelpers = {}
 
+local modname = minetest.get_current_modname()
+local modpath = minetest.get_modpath(modname)
+minetest.log("info", modname.." initialising at path "..modpath)
+
 --[[
 local debugprint = function(msg)
 	print("## "..msg)
@@ -185,29 +189,9 @@ modhelpers.playerlegnode = playerlegnode
 
 
 -- sanity type checking helpers
-modhelpers.check = {}
-local numbercheck = function(val, label, caller)
-	local valtype = type(val)
-	if (valtype ~= "number") then
-		error(caller.."(): non-numerical value passed for "..label)
-	end
-end
-modhelpers.check.number = numbercheck
-
-local integercheck = function(val, label, caller)
-	numbercheck(val, label, caller)
-	if (val % 1.0 ~= 0.0) then
-		error(caller.."(): integer value required for "..label)
-	end
-end
-modhelpers.check.integer = integercheck
-
-local rangecheck = function(val, lower, upper, isinteger, label, caller)
-	if isinteger then integercheck(val, label, caller) else numbercheck(val, label, caller) end
-	if (val < lower) or (val > upper) then
-		error(caller.."(): "..label.." expected value in range "..lower.."-"..upper..", got "..val)
-	end
-end
+local check = dofile(modpath.."/checkers.lua")
+modhelpers.check = check
+local rangecheck = check.range
 
 
 
