@@ -7,111 +7,13 @@ minetest.log("info", modname.." initialising at path "..modpath)
 -- FIXME: does this change on non-unixlike targets
 local dirpathsep = "/"
 
---[[
-local debugprint = function(msg)
-	print("## "..msg)
-end
-]]
-local debugprint = function(msg)
-	-- no-op
-end
-
 
 
 -- pretty-print co-ordinates
 modhelpers.coords = dofile(modpath..dirpathsep.."coords.lua")
 
-
-
-modhelpers.repstr = function(base, count)
-	base = tostring(base)
-	count = tonumber(count) or 0
-	local ret = ""
-	for i = 1, count, 1 do
-		ret = ret..base
-	end
-	return ret
-end
-
-
-
--- object pretty printing
-
--- forward declaration for cyclic recursive calling
-local tabletostring
-
-local valuetostring = function(obj, label, level, recurselimit, visited, multiline, indentlevel, indentstr)
-	local valtype = type(obj)
-	if valtype == "string" then
-		return "\""..tostring(obj).."\""
-	elseif valtype == "table" then
-		debugprint(tostring(obj))
-		if level >= recurselimit then
-			debugprint(label.." would exceed recursion limit, skipping")
-			return tostring(obj)
-		else
-			local cyclelabel = visited[obj]
-			if not cyclelabel then
-				-- make a note of this object being visited to avoid cycle loops
-				visited[obj] = label
-				debugprint(label.." is an unvisited table, recursing.")
-				return tabletostring(obj, label, level+1, recurselimit, visited, multiline, indentlevel, indentstr)
-			else
-				debugprint(label.." already encountered, skipping.")
-				return tostring(obj).." -- "..cyclelabel
-			end
-		end
-	else
-		return tostring(obj)
-	end
-end
-
--- handle tables in particular, calling objtostring() on each.
--- this and the above call each other recursively.
--- NB declared local above
-tabletostring = function(t, label, level, recurselimit, visited, multiline, indentlevel, indentstr)
-	local recordsep
-	if multiline then
-		recordsep = "\n" .. modhelpers.repstr(indentstr, indentlevel+1)
-	else
-		recordsep = " "
-	end
-	local kvsep = " = "
-
-	local ret = "{"
-	local first = true
-	for key, value in pairs(t) do
-		-- print comma after preceding item if not the first
-		if first then first = false else
-			ret = ret .. ","
-		end
-		ret = ret .. recordsep
-		local valuestr = valuetostring(value, label.."."..key, level, recurselimit, visited, multiline, indentlevel+1, indentstr)
-		ret = ret..key..kvsep..valuestr
-	end
-	if multiline then
-		ret = ret.."\n"..modhelpers.repstr(indentstr, indentlevel)
-	else
-		ret = ret .. " "
-	end
-	ret = ret.."}"
-	return ret
-end
-
--- format an object in a canonical form for logs etc.
--- note that this is not advisable to call on large tables,
--- such as the minetest global.
--- doing so tends to lead to out-of-memory errors.
-modhelpers.formatobj = function(obj, label, recurselimit, multiline, indentstr)
-	recurselimit = recurselimit or 4
-	return valuetostring(obj, label, 0, recurselimit, {}, multiline, 0, indentstr)
-end
--- defaults for multi-line printing.
--- multiple spaces are used as the indent,
--- as chat output via the luacmd mod's print() doesn't give tabs a sane size.
-modhelpers.formatobjmultiline = function(obj, label, recurselimit)
-	return modhelpers.formatobj(obj, label, recurselimit, true, "    ")
-end
+-- pretty object printing
+modhelpers.prettyprint = dofile(modpath..dirpathsep.."prettyprint.lua")
 
 
 
