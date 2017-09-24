@@ -62,18 +62,6 @@ modhelpers.getstoodnode = function(playerref)
 	return { data = minetest.get_node(pos), pos = pos }
 end
 
---[[
-modhelpers.playerlegnode = function(p) return posbias(playerstoodnode(p), 0, 1, 0) end
-modhelpers.playerheadnode = function(p) return posbias(playerstoodnode(p), 0, 2, 0) end
-]]
--- not using these because of the potential for the player's size/cbox to change in dev MT versions
--- instead pretend the player is in the "middle" of the block stood in.
--- a possible fix here would be to inspect said properties for these values.
-local playerlegnode = function(playerref)
-	return pos_center_on_node(posbias(playerref:get_pos(), 0.0, 0.5, 0.0))
-end
-modhelpers.playerlegnode = playerlegnode
-
 
 
 -- sanity type checking helpers
