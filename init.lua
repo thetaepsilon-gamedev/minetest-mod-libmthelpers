@@ -41,19 +41,22 @@ modhelpers.tablegrep = tablegrep
 
 --player positioning helpers
 
--- sometimes, I freaking love functional programming techniques
-local pos_center_on_node = function(pos)
-	return tablefilter(pos, math.floor)
-end
-modhelpers.pos_center_on_node = pos_center_on_node
 
 local posbias = function(pos, x, y, z)
 	return { x=pos.x + x, y=pos.y + y, z=pos.z + z}
 end
 modhelpers.posbias = posbias
 
+-- flooring alone isn't appropriate when the block at X contains coords of X-1.
+local pos_center_on_node = function(pos)
+	return tablefilter(posbias(pos, 0.5, 0.5, 0.5), math.floor)
+end
+modhelpers.pos_center_on_node = pos_center_on_node
+
+-- reverse Y correction applied above here,
+-- as the player's .5 Y when standing on a block actually rounds down to what we want.
 local playerstoodnode = function(playerref)
-	return pos_center_on_node(posbias(playerref:get_pos(), 0.5, 0.0, 0.5))
+	return pos_center_on_node(posbias(playerref:get_pos(), 0.0, -0.5, 0.0))
 end
 modhelpers.playerstoodnode = playerstoodnode
 
