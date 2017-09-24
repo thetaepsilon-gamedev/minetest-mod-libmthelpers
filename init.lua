@@ -15,27 +15,9 @@ modhelpers.coords = dofile(modpath..dirpathsep.."coords.lua")
 -- pretty object printing
 modhelpers.prettyprint = dofile(modpath..dirpathsep.."prettyprint.lua")
 
-
-
 -- table utilities
-
-local tablefilter = function(table, f)
-	local ret = {}
-	for key, value in pairs(table) do
-		ret[key] = f(value)
-	end
-	return ret
-end
-modhelpers.tablefilter = tablefilter
-
-local tablegrep = function(table, f)
-	local ret = {}
-	for key, value in pairs(table) do
-		if f(key) then ret[key] = value end 
-	end
-	return ret
-end
-modhelpers.tablegrep = tablegrep
+local tableutils = dofile(modpath..dirpathsep.."tableutils.lua")
+modhelpers.tableutils = tableutils
 
 
 
@@ -48,6 +30,7 @@ end
 modhelpers.posbias = posbias
 
 -- flooring alone isn't appropriate when the block at X contains coords of X-1.
+local tablefilter = tableutils.filter
 local pos_center_on_node = function(pos)
 	return tablefilter(posbias(pos, 0.5, 0.5, 0.5), math.floor)
 end
