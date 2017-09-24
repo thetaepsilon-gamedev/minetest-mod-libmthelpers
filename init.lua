@@ -4,6 +4,9 @@ local modname = minetest.get_current_modname()
 local modpath = minetest.get_modpath(modname)
 minetest.log("info", modname.." initialising at path "..modpath)
 
+-- FIXME: does this change on non-unixlike targets
+local dirpathsep = "/"
+
 --[[
 local debugprint = function(msg)
 	print("## "..msg)
@@ -16,24 +19,7 @@ end
 
 
 -- pretty-print co-ordinates
-modhelpers.formatcoords = function(vec, sep, start, tail)
-	sep = sep or ","
-	start = start or "("
-	tail = tail or ")"
-	local coord = function(val)
-		valtype = type(val)
-		local ret = ""
-		if valtype == nil then
-			ret = "???"
-		elseif valtype == "number" then
-			ret = tostring(val)
-		else
-			ret = "<NaN>"
-		end
-		return ret
-	end
-	return start..coord(vec.x)..sep..coord(vec.y)..sep..coord(vec.z)..tail
-end
+modhelpers.coords = dofile(modpath..dirpathsep.."coords.lua")
 
 
 
@@ -189,7 +175,7 @@ modhelpers.playerlegnode = playerlegnode
 
 
 -- sanity type checking helpers
-local check = dofile(modpath.."/checkers.lua")
+local check = dofile(modpath..dirpathsep.."checkers.lua")
 modhelpers.check = check
 local rangecheck = check.range
 
