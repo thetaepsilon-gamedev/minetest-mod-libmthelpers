@@ -19,44 +19,16 @@ modhelpers.prettyprint = dofile(modpath..dirpathsep.."prettyprint.lua")
 local tableutils = dofile(modpath..dirpathsep.."tableutils.lua")
 modhelpers.tableutils = tableutils
 
-
-
 --player positioning helpers
-
-
-local posbias = function(pos, x, y, z)
-	return { x=pos.x + x, y=pos.y + y, z=pos.z + z}
-end
-modhelpers.posbias = posbias
-
--- flooring alone isn't appropriate when the block at X contains coords of X-1.
-local tablefilter = tableutils.filter
-local pos_center_on_node = function(pos)
-	return tablefilter(posbias(pos, 0.5, 0.5, 0.5), math.floor)
-end
-modhelpers.pos_center_on_node = pos_center_on_node
-
--- reverse Y correction applied above here,
--- as the player's .5 Y when standing on a block actually rounds down to what we want.
-local playerstoodnode = function(playerref)
-	return pos_center_on_node(posbias(playerref:get_pos(), 0.0, -0.5, 0.0))
-end
-modhelpers.playerstoodnode = playerstoodnode
-
-modhelpers.getstoodnode = function(playerref)
-	local pos = playerstoodnode(playerref)
-	return { data = minetest.get_node(pos), pos = pos }
-end
-
-
+modhelpers.playerpos = dofile(modpath..dirpathsep.."playerpos.lua")
 
 -- sanity type checking helpers
 local check = dofile(modpath..dirpathsep.."checkers.lua")
 modhelpers.check = check
+
+
+
 local rangecheck = check.range
-
-
-
 -- functions to deal with param2 facedir values
 
 -- for some reason the values that minetest.facedir_to_dir() were returning made bugger-all sense.
