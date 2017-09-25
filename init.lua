@@ -4,8 +4,12 @@ local modname = minetest.get_current_modname()
 local modpath = minetest.get_modpath(modname)
 minetest.log("info", modname.." initialising at path "..modpath)
 
+local componentbase = "com.github.thetaepsilon.libmthelpers"
+
 -- FIXME: does this change on non-unixlike targets
 local dirpathsep = "/"
+
+
 
 -- sub-components to register, and their origin files.
 -- note that some components depend on others here,
@@ -25,5 +29,7 @@ for _, entry in ipairs(regtable) do
 	local scriptname = entry[2]
 	scriptname = (scriptname or componentname)
 	local scriptpath = modpath..dirpathsep..scriptname..".lua"
-	modhelpers[componentname] = dofile(scriptpath)
+	local component = dofile(scriptpath)
+	modhelpers[componentname] = component
+	modns.register(componentbase.."."..componentname, component)
 end
