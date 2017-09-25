@@ -26,20 +26,5 @@ modhelpers.playerpos = dofile(modpath..dirpathsep.."playerpos.lua")
 local check = dofile(modpath..dirpathsep.."checkers.lua")
 modhelpers.check = check
 
-
-
-local rangecheck = check.range
--- functions to deal with param2 facedir values
-
--- for some reason the values that minetest.facedir_to_dir() were returning made bugger-all sense.
--- after sanity checking with the docs at least the docs matched the param2 values I got,
--- so I decided to re-implement this here.
-local param2_facedir_split = function(param2)
-	local caller="param2_facedir_split"
-	-- integercheck(param2, "param2", caller)
-	rangecheck(param2, 0, 23, true, "param2", caller)
-	local axis = math.floor(param2 / 4)
-	local rotation = param2 % 4
-	return { axis=axis, rotation=rotation }
-end
-modhelpers.param2_facedir_split = param2_facedir_split
+-- facedir helpers
+modhelpers.facedir = dofile(modpath..dirpathsep.."facedir.lua")
