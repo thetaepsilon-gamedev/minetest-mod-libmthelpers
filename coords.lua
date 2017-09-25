@@ -4,8 +4,9 @@ coords.format = function(vec, sep, start, tail)
 	sep = sep or ","
 	start = start or "("
 	tail = tail or ")"
+
 	local coord = function(val)
-		valtype = type(val)
+		local valtype = type(val)
 		local ret = ""
 		if valtype == nil then
 			ret = "???"
@@ -16,6 +17,7 @@ coords.format = function(vec, sep, start, tail)
 		end
 		return ret
 	end
+
 	return start..coord(vec.x)..sep..coord(vec.y)..sep..coord(vec.z)..tail
 end
 
