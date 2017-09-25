@@ -1,12 +1,25 @@
 local stats={}
 
-local nodes_by_modname = function()
+local node_modname = function(key, value)
+	local start,_ = string.find(key, ":")
+	-- if no colon found, it's probably air, which doesn't really belong to a mod.
+	if start ~= nil then
+		return string.sub(key, 1, start-1)
+	else
+		return nil
+	end
+end
+
+
+
+local count_buckets = function(input, bucketfunc)
 	local results={}
-	for key, _ in pairs(minetest.registered_nodes) do
-		local start,_ = string.find(key, ":") 
-		if start ~= nil then
-			local modname=string.sub(key, 1, start-1)
-			local currentcount=results[modname]
+
+	for key, value in pairs(input) do
+		local bucket = bucketfunc(key, value)
+
+		if bucket ~= nil then
+			local currentcount=results[bucket]
 
 			if currentcount == nil then
 				currentcount = 1
@@ -14,10 +27,18 @@ local nodes_by_modname = function()
 				currentcount = currentcount + 1
 			end
 
-			results[modname] = currentcount
+			results[bucket] = currentcount
 		end
 	end
+
 	return results
+end
+stats.count_buckets = count_buckets
+
+
+
+local nodes_by_modname = function()
+	return count_buckets(minetest.registered_nodes, node_modname)
 end
 stats.nodes_by_modname = nodes_by_modname
 
