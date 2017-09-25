@@ -7,24 +7,22 @@ minetest.log("info", modname.." initialising at path "..modpath)
 -- FIXME: does this change on non-unixlike targets
 local dirpathsep = "/"
 
+-- sub-components to register, and their origin files.
+-- note that some components depend on others here,
+-- accessed by using the modhelpers global.
+local regtable = {
+	{ "coords" },
+	{ "prettyprint" },
+	{ "tableutils" },
+	{ "playerpos" },
+	{ "check", "checkers" },	-- filename doesn't fit pattern
+	{ "facedir" }
+}
 
-
--- pretty-print co-ordinates
-modhelpers.coords = dofile(modpath..dirpathsep.."coords.lua")
-
--- pretty object printing
-modhelpers.prettyprint = dofile(modpath..dirpathsep.."prettyprint.lua")
-
--- table utilities
-local tableutils = dofile(modpath..dirpathsep.."tableutils.lua")
-modhelpers.tableutils = tableutils
-
---player positioning helpers
-modhelpers.playerpos = dofile(modpath..dirpathsep.."playerpos.lua")
-
--- sanity type checking helpers
-local check = dofile(modpath..dirpathsep.."checkers.lua")
-modhelpers.check = check
-
--- facedir helpers
-modhelpers.facedir = dofile(modpath..dirpathsep.."facedir.lua")
+for _, entry in ipairs(regtable) do
+	local componentname = entry[1]
+	local scriptname = entry[2]
+	scriptname = (scriptname or componentname)
+	local scriptpath = modpath..dirpathsep..scriptname..".lua"
+	modhelpers[componentname] = dofile(scriptpath)
+end
