@@ -31,8 +31,8 @@ for _, entry in ipairs(regtable) do
 	scriptname = (scriptname or componentname)
 	local scriptpath = modpath..dirpathsep..scriptname..".lua"
 	local component = dofile(scriptpath)
+	modhelpers[componentname] = component
 	if reg then
-		modhelpers[componentname] = component
 		modns.register(componentbase.."."..componentname, component)
 	end
 end
