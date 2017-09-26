@@ -14,11 +14,15 @@ end
 
 local count_buckets = function(input, bucketfunc)
 	local results={}
+	local total = 0
+	local total_with_nobucket = 0
 
 	for key, value in pairs(input) do
+		total_with_nobucket = total_with_nobucket + 1
 		local bucket = bucketfunc(key, value)
 
 		if bucket ~= nil then
+			total = total + 1
 			local currentcount=results[bucket]
 
 			if currentcount == nil then
@@ -31,7 +35,7 @@ local count_buckets = function(input, bucketfunc)
 		end
 	end
 
-	return results
+	return results, { count=total, with_nobucket=total_with_nobucket}
 end
 stats.count_buckets = count_buckets
 
@@ -43,9 +47,12 @@ end
 stats.nodes_by_modname = nodes_by_modname
 
 local show_nodes_by_modname = function(printer)
-	for name, value in pairs(nodes_by_modname()) do
+	local results, totals = nodes_by_modname()
+	for name, value in pairs(results) do
 		printer(name..": "..tostring(value))
 	end
+	printer("-- total nodes: "..totals.count)
+	printer("-- total nodes including nodes without a mod: "..totals.with_nobucket)
 end
 stats.show_nodes_by_modname = show_nodes_by_modname
 
