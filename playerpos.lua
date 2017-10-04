@@ -35,4 +35,11 @@ end
 
 
 
+playerpos.getstoodmeta = function(playerref)
+	local pos = playerstoodnode(playerref)
+	return minetest.get_meta(pos):to_table().fields
+end
+
+
+
 return playerpos
