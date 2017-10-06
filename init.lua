@@ -22,7 +22,8 @@ local regtable = {
 	{ "playerpos" },
 	{ "check", "checkers" },	-- filename doesn't fit pattern
 	{ "facedir" },
-	{ "stats" }
+	{ "stats" },
+	{ "readonly" },
 }
 
 for _, entry in ipairs(regtable) do
