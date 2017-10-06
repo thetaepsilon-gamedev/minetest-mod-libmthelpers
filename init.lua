@@ -4,7 +4,7 @@ local modname = minetest.get_current_modname()
 local modpath = minetest.get_modpath(modname)
 minetest.log("info", modname.." initialising at path "..modpath)
 
-local componentbase = "com.github.thetaepsilon.libmthelpers"
+local componentbase = "com.github.thetaepsilon.minetest.libmthelpers"
 
 -- FIXME: does this change on non-unixlike targets
 local dirpathsep = "/"
