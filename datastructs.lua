@@ -1,6 +1,6 @@
 local datastructs = {}
-local datastructs.new = {}
-local datastructs.selftest = {}
+datastructs.new = {}
+datastructs.selftest = {}
 
 -- a "set" structure.
 -- allows adding objects, removing them by value, and iterating through them.
