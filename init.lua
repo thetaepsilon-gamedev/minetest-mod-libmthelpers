@@ -24,8 +24,8 @@ local regtable = {
 	{ "facedir" },
 	{ "stats" },
 	{ "readonly" },
-	{ "datastructs" },
 	{ "iterators" },
+	{ "datastructs" },
 }
 
 for _, entry in ipairs(regtable) do
