@@ -31,4 +31,15 @@ end
 check.range = rangecheck
 
 
+
+check.mkassert = function(caller)
+	return function(condition, message)
+		if not condition then
+			error(caller..": "..message)
+		end
+	end
+end
+
+
+
 return check
