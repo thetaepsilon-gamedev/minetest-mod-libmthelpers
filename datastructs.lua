@@ -26,7 +26,7 @@ datastructs.new.set = function()
 		-- returns true if item was removed, false if it didn't exist
 		remove = function(v)
 			local didexist = test(v)
-			if didexist then entries[key] = nil end
+			if didexist then entries[unique(v)] = nil end
 			return didexist
 		end,
 		ismember = test	-- see above
@@ -41,7 +41,7 @@ local mkassert = modhelpers.check.mkassert
 datastructs.selftest.set = function()
 	-- this should shadow the lua built-in with one that has a caller name included.
 	local assert = mkassert("modhelpers.datastructs.selftest.set()")
-	set = datastructs.new.set()
+	local set = datastructs.new.set()
 	local t = {}
 
 	local notexists = "object should not be considered present if not previously inserted"
