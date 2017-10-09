@@ -2,18 +2,14 @@
 
 local iterators = {}
 
--- producers an object wrapping a coroutine in an object on which you can call .next().
--- the coroutine function should "return" (by either coroutine.yield() or normal return)
--- a non-nil object to continue running, nil to stop.
--- the coroutine will only be supplied a single parameter.
--- only a single object will be passed through to the return value of .next().
--- no return values will be visible to coroutine.yield in the function.
+-- producers an object wrapping a coroutine in an object to yield an iterator closure.
+-- the iterator works as outlined in the lua docs to work with the generic for-loop;
+-- returns nil to stop, non-nil for a next value.
 iterators.mkiterator = function(coroutinefn, arg)
 	local started = false
 	local co = coroutine.create(coroutinefn)
 	local breaker = false
-	return {
-		next = function()
+	return function()
 			if breaker then return nil end
 			local continuing
 			local result
@@ -24,8 +20,7 @@ iterators.mkiterator = function(coroutinefn, arg)
 			end
 			if not continuing or result == nil then breaker = true end
 			return result
-		end
-	}
+	end
 end
 
 iterators.mktableiterator = function(t)

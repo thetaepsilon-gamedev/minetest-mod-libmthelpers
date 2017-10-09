@@ -47,7 +47,7 @@ local listequal = modhelpers.check.listequaltest
 
 local collect_iterator = function(it, results)
 	while true do
-		local result = it.next()
+		local result = it()
 		if result ~= nil then
 			table.insert(results, result)
 		else
