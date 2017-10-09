@@ -45,21 +45,14 @@ end
 local mkassert = modhelpers.check.mkassert
 local listequal = modhelpers.check.listequaltest
 
-local collect_iterator = function(it, results)
-	while true do
-		local result = it()
-		if result ~= nil then
-			table.insert(results, result)
-		else
-			break
-		end
-	end
+local collect_iterator = function(it)
+	local results = {}
+	for v in it do table.insert(results, v) end
+	return results
 end
 
 local collect_set = function(set)
-	local results = {}
-	collect_iterator(set.iterator(), results)
-	return results
+	return collect_iterator(set.iterator())
 end
 
 -- maybe I could make this runnable outside MT...
