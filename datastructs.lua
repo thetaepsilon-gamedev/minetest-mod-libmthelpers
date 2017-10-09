@@ -40,7 +40,8 @@ local mkassert = modhelpers.check.mkassert
 -- maybe I could make this runnable outside MT...
 datastructs.selftest.set = function()
 	-- this should shadow the lua built-in with one that has a caller name included.
-	local assert = mkassert("modhelpers.datastructs.selftest.set()")
+	local name = "modhelpers.datastructs.selftest.set()"
+	local assert = mkassert(name)
 	local set = datastructs.new.set()
 	local t = {}
 
@@ -51,6 +52,8 @@ datastructs.selftest.set = function()
 	assert(set.add(t), "object should be newly inserted")
 	assert(set.ismember(t), "object should be member after being inserted")
 	assert(set.remove(t), "object should have been removed after being inserted")
+
+	return name.." self-tests completed"
 end
 
 
