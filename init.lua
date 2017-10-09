@@ -25,6 +25,7 @@ local regtable = {
 	{ "stats" },
 	{ "readonly" },
 	{ "datastructs" },
+	{ "iterators" },
 }
 
 for _, entry in ipairs(regtable) do
