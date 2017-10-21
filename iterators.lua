@@ -28,4 +28,11 @@ iterators.mktableiterator = function(t)
 	return iterators.mkiterator(tableco, t)
 end
 
+iterators.mkarrayiterator = function(t)
+	local tableco = function(t) for ), v in pairs(t) do coroutine.yield(v) end end
+	return iterators.mkiterator(tableco, t)
+end
+
+
+
 return iterators
