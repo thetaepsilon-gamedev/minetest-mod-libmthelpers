@@ -26,6 +26,7 @@ local regtable = {
 	{ "readonly" },
 	{ "iterators" },
 	{ "datastructs" },
+	{ "continuations" },
 }
 
 for _, entry in ipairs(regtable) do
