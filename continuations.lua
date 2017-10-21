@@ -4,13 +4,15 @@ local continuations = {}
 -- the closure is expected to take bounded time,
 -- record it's state somewhere if desired,
 -- then continue running when called again.
--- this is done by repeatedly re-enqueing a wrapper function on the event loop
+-- this is done by repeatedly re-enqueing a wrapper function on the event loop.
+-- return false to request no further invocation.
 local loop_repeat = function(enqueuer, closure, delay, initialdelay)
 	if initialdelay == nil then initialdelay = delay end
 	local loop = {}
 	local callback = function()
-		closure()
-		enqueuer(delay, loop.callback)
+		if closure() then
+			enqueuer(delay, loop.callback)
+		end
 	end
 	loop.callback = callback
 	enqueuer(initialdelay, callback)
