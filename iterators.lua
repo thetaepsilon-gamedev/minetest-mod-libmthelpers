@@ -29,7 +29,7 @@ iterators.mktableiterator = function(t)
 end
 
 iterators.mkarrayiterator = function(t)
-	local tableco = function(t) for ), v in pairs(t) do coroutine.yield(v) end end
+	local tableco = function(t) for _, v in pairs(t) do coroutine.yield(v) end end
 	return iterators.mkiterator(tableco, t)
 end
 
