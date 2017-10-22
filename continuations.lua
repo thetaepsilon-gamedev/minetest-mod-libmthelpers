@@ -51,8 +51,11 @@ end
 -- so this should be used either with a conservative batch count,
 -- or a relatively predictable processing function.
 local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
-
+	local dname = "loop_batch() "
+	local debugger = getdebugger(opts)
 	local batch_process = function()
+		local dname = "batch_process() "
+		debugger(dname.."callback entry")
 		local count = 0
 		local stop = false
 		while true do
@@ -69,7 +72,9 @@ local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
 			-- don't run over, but still request to run again
 			if count >= maxbatch then break end
 		end
-		return not stop
+		local result = not stop
+		debugger(dname.."result="..tostring(result))
+		return result
 	end
 	loop_repeat(enqueuer, batch_process, opts)
 end
