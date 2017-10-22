@@ -66,17 +66,23 @@ local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
 		local stop = false
 		while true do
 			local nextitem = iterator()
+			debugger(sname.."nextitem="..tostring(nextitem))
 			if nextitem == nil then
+				debugger(sname.."stopping due to iterator end")
 				stop = true
 				break
 			end
 			if not callback(nextitem) then
+				debugger(sname.."stopping as callback returned false")
 				stop = true
 				break
 			end
 			count = count + 1
 			-- don't run over, but still request to run again
-			if count >= maxbatch then break end
+			if count >= maxbatch then
+				debugger(sname.."halting loop due to limit")
+				break
+			end
 		end
 		local result = not stop
 		debugger(sname.."result="..tostring(result))
