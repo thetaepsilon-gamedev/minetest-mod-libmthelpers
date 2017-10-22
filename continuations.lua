@@ -7,29 +7,35 @@ local continuations = {}
 -- this is done by repeatedly re-enqueing a wrapper function on the event loop.
 -- return false to request no further invocation.
 local missingdebugger = function(msg) end
-local getdebugger = function(opts)
+local getdebugger = function(opts, dname)
 	local debugger = opts.debugger
-	if type(debugger) ~= "function" then debugger = missingdebugger end
-	return debugger
+	local result = missingdebugger
+	dname = tostring(dname).." "
+	if type(debugger) == "function" then
+		result = function(msg)
+			debugger(dname..msg)
+		end
+	end
+	return result
 end
 local loop_repeat = function(enqueuer, closure, opts)
-	local dname = "loop_repeat() "
+	local dname = "loop_repeat()"
 	if type(opts) ~= "table" then opts = {} end
 
 	local delay = opts.delay
 	if delay == nil then delay = 0 end
 	local initialdelay = opts.initialdelay
 	if initialdelay == nil then initialdelay = 0 end
-	local debugger = getdebugger(opts)
+	local debugger = getdebugger(opts, dname)
 
 	local loop = {}
 	local callback = function()
-		debugger(dname.."callback entry")
+		debugger("callback entry")
 		if closure() then
-			debugger(dname.."restarting closure")
+			debugger("restarting closure")
 			enqueuer(delay, loop.callback)
 		else
-			debugger(dname.."closure requested termination")
+			debugger("closure requested termination")
 		end
 	end
 	loop.callback = callback
@@ -51,11 +57,11 @@ end
 -- so this should be used either with a conservative batch count,
 -- or a relatively predictable processing function.
 local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
-	local dname = "loop_batch() "
-	local debugger = getdebugger(opts)
+	local dname = "loop_batch()"
+	local debugger = getdebugger(opts, dname)
 	local batch_process = function()
-		local dname = "batch_process() "
-		debugger(dname.."callback entry")
+		local sname = "batch_process() "
+		debugger(sname.."callback entry")
 		local count = 0
 		local stop = false
 		while true do
@@ -73,7 +79,7 @@ local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
 			if count >= maxbatch then break end
 		end
 		local result = not stop
-		debugger(dname.."result="..tostring(result))
+		debugger(sname.."result="..tostring(result))
 		return result
 	end
 	loop_repeat(enqueuer, batch_process, opts)
