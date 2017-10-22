@@ -6,6 +6,12 @@ local continuations = {}
 -- then continue running when called again.
 -- this is done by repeatedly re-enqueing a wrapper function on the event loop.
 -- return false to request no further invocation.
+local missingdebugger = function(msg) end
+local getdebugger = function(opts)
+	local debugger = opts.debugger
+	if type(debugger) ~= "function" then debugger = missingdebugger end
+	return debugger
+end
 local loop_repeat = function(enqueuer, closure, opts)
 	local dname = "loop_repeat() "
 	if type(opts) ~= "table" then opts = {} end
@@ -14,8 +20,7 @@ local loop_repeat = function(enqueuer, closure, opts)
 	if delay == nil then delay = 0 end
 	local initialdelay = opts.initialdelay
 	if initialdelay == nil then initialdelay = 0 end
-	local debugger = opts.debugger
-	if type(debugger) ~= "function" then debugger = function(msg) end end
+	local debugger = getdebugger(opts)
 
 	local loop = {}
 	local callback = function()
@@ -46,6 +51,7 @@ end
 -- so this should be used either with a conservative batch count,
 -- or a relatively predictable processing function.
 local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
+
 	local batch_process = function()
 		local count = 0
 		local stop = false
