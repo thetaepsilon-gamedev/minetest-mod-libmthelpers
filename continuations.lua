@@ -6,8 +6,14 @@ local continuations = {}
 -- then continue running when called again.
 -- this is done by repeatedly re-enqueing a wrapper function on the event loop.
 -- return false to request no further invocation.
-local loop_repeat = function(enqueuer, closure, delay, initialdelay)
-	if initialdelay == nil then initialdelay = delay end
+local loop_repeat = function(enqueuer, closure, opts)
+	if type(opts) ~= "table" then opts = {} end
+
+	local delay = opts.delay
+	if delay == nil then delay = 0 end
+	local initialdelay = opts.initialdelay
+	if initialdelay == nil then initialdelay = 0 end
+
 	local loop = {}
 	local callback = function()
 		if closure() then
@@ -22,8 +28,8 @@ continuations.event_loop_repeat = loop_repeat
 -- enqueue wrapper and helper utilising the MT api's minetest.after routine
 local mt = function(delay, callback) minetest.after(delay, callback) end
 continuations.minetest_enqueuer = mt
-continuations.minetest_loop_repeat = function(closure, delay, initialdelay)
-	loop_repeat(mt, closure, delay, initialdelay)
+continuations.minetest_loop_repeat = function(closure, opts)
+	loop_repeat(mt, closure, opts)
 end
 
 
@@ -33,8 +39,7 @@ end
 -- so this should be used either with a conservative batch count,
 -- or a relatively predictable processing function.
 local loop_batch = function(enqueuer, callback, iterator, maxbatch)
-	local delay = 0
-	local initialdelay = 0
+	local opts = { delay = 0, initialdelay = 0 }
 	local batch_process = function()
 		local count = 0
 		local stop = false
@@ -54,7 +59,7 @@ local loop_batch = function(enqueuer, callback, iterator, maxbatch)
 		end
 		return not stop
 	end
-	loop_repeat(enqueuer, batch_process, delay, initialdelay)
+	loop_repeat(enqueuer, batch_process, opts)
 end
 continuations.loop_batch = loop_batch
 
