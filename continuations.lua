@@ -38,8 +38,7 @@ end
 -- this currently only works on invocation count basis, not elapsed time,
 -- so this should be used either with a conservative batch count,
 -- or a relatively predictable processing function.
-local loop_batch = function(enqueuer, callback, iterator, maxbatch)
-	local opts = { delay = 0, initialdelay = 0 }
+local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
 	local batch_process = function()
 		local count = 0
 		local stop = false
@@ -65,9 +64,9 @@ continuations.loop_batch = loop_batch
 
 -- helper over array-like tables, see iterators.lua
 local mkarrayiterator = modhelpers.iterators.mkarrayiterator
-continuations.loop_batch_array = function(enqueuer, callback, array, maxbatch)
+continuations.loop_batch_array = function(enqueuer, opts, callback, array, maxbatch)
 	local iterator = mkarrayiterator(array)
-	loop_batch(enqueuer, callback, iterator, maxbatch)
+	loop_batch(enqueuer, opts, callback, iterator, maxbatch)
 end
 
 
