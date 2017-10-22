@@ -26,4 +26,45 @@ continuations.minetest_loop_repeat = function(closure, delay, initialdelay)
 	loop_repeat(mt, closure, delay, initialdelay)
 end
 
+
+
+-- batches several repeated operations up to a limit.
+-- this currently only works on invocation count basis, not elapsed time,
+-- so this should be used either with a conservative batch count,
+-- or a relatively predictable processing function.
+local loop_batch = function(enqueuer, callback, iterator, maxbatch)
+	local delay = 0
+	local initialdelay = 0
+	local batch_process = function()
+		local count = 0
+		local stop = false
+		while true do
+			local nextitem = iterator()
+			if nextitem == nil then
+				stop = true
+				break
+			end
+			if not callback(nextitem) then
+				stop = true
+				break
+			end
+			count = count + 1
+			-- don't run over, but still request to run again
+			if count >= maxbatch then break end
+		end
+		return not stop
+	end
+	loop_repeat(enqueuer, batch_process, delay, initialdelay)
+end
+continuations.loop_batch = loop_batch
+
+-- helper over array-like tables, see iterators.lua
+local mkarrayiterator = modhelpers.iterators.mkarrayiterator
+continuations.loop_batch_array = function(enqueuer, callback, array, maxbatch)
+	local iterator = mkarrayiterator(array)
+	loop_batch(enqueuer, callback, iterator, maxbatch)
+end
+
+
+
 return continuations
