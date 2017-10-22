@@ -1,4 +1,5 @@
 modhelpers = {}
+_mod = {}
 
 local modname = minetest.get_current_modname()
 local modpath = minetest.get_modpath(modname)
@@ -40,3 +41,5 @@ for _, entry in ipairs(regtable) do
 		modns.register(componentbase.."."..componentname, component)
 	end
 end
+
+_mod = nil
