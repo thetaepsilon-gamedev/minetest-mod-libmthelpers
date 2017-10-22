@@ -7,17 +7,24 @@ local continuations = {}
 -- this is done by repeatedly re-enqueing a wrapper function on the event loop.
 -- return false to request no further invocation.
 local loop_repeat = function(enqueuer, closure, opts)
+	local dname = "loop_repeat() "
 	if type(opts) ~= "table" then opts = {} end
 
 	local delay = opts.delay
 	if delay == nil then delay = 0 end
 	local initialdelay = opts.initialdelay
 	if initialdelay == nil then initialdelay = 0 end
+	local debugger = opts.debugger
+	if type(debugger) ~= "function" then debugger = function(msg) end end
 
 	local loop = {}
 	local callback = function()
+		debugger(dname.."callback entry")
 		if closure() then
+			debugger(dname.."restarting closure")
 			enqueuer(delay, loop.callback)
+		else
+			debugger(dname.."closure requested termination")
 		end
 	end
 	loop.callback = callback
