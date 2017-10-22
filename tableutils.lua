@@ -28,4 +28,23 @@ tableutils.shallowcopy = function(input)
 	return ret
 end
 
+-- overlay values onto a table provided by a caller,
+-- without clobbering their values if it's held by the caller for re-use.
+-- resulting table will see the overlay table's values override the base table.
+-- WARNING: does not work correctly with anything using pairs() or ipairs()!
+tableutils.overlay = function(t, o)
+	local result = {}
+	local meta = {
+		__index = function(tbl, key)
+			local result = o[key]
+			if result == nil then
+				result = t[key]
+			end
+			return result
+		end
+	}
+	setmetatable(result, meta)
+	return result
+end
+
 return tableutils
