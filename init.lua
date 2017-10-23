@@ -33,8 +33,16 @@ local regtable = {
 for _, entry in ipairs(regtable) do
 	local componentname = entry[1]
 	local scriptname = entry[2]
+	local isdir = entry[3]
 	scriptname = (scriptname or componentname)
-	local scriptpath = modpath..dirpathsep..scriptname..".lua"
+
+	local scriptpath = ""
+	if isdir then
+		scriptpath = modpath..dirpathsep..scriptname..dirpathsep.."module.lua"
+	else
+		scriptpath = modpath..dirpathsep..scriptname..".lua"
+	end
+
 	local component = dofile(scriptpath)
 	modhelpers[componentname] = component
 	if reg then
