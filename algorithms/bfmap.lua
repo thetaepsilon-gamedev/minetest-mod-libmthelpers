@@ -137,6 +137,7 @@ return {
 					-- mark this node visited
 					visitor(frontier)
 					self.visited[frontier_hash] = true
+					increment(stats, "visited_count")
 				else
 					debugger(dname.."frontier DISCARED by testvertex")
 					increment(stats, "frontier_vertex_discarded")
