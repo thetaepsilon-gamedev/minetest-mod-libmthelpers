@@ -15,12 +15,17 @@ local checksamesize = function(expected)
 end
 checksamesize(0)
 
+-- check that all non-nil items are successfully inserted.
+local checkpush = function(item)
+	assert(queue.enqueue(item), "queue should be able to accept non-nil item")
+end
+
 local items = { 1, 34, 453, 6 }
 
 local testordering = function(items)
 	local total = #items
 	for index, item in ipairs(items) do
-		queue.enqueue(item)
+		checkpush(item)
 		assert(queue.size() == index, "queue should have size "..tostring(index).." after inserting that many items")
 		pushnil()
 		checksamesize(index)
