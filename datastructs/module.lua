@@ -6,6 +6,11 @@ local mkiterator = modhelpers.iterators.mkiterator
 
 local iterate_values_co = function(t) for _, v in pairs(t) do coroutine.yield(v) end end
 
+local moduledir = _mod.moduledir
+-- FIFO queue structure
+local qi = dofile(moduledir.."queue.lua")
+datastructs.new.queue = qi.new
+
 -- a "set" structure.
 -- allows adding objects, removing them by value, and iterating through them.
 datastructs.new.set = function()
