@@ -116,6 +116,7 @@ return {
 					debugger(dname.."frontier passed testvertex")
 					-- get successors of this vertex
 					local successors = successor(frontier)
+					increment(stats, "successor_invocation_count")
 					debugger(dname.."successor ran successfully, result="..tostring(successors))
 					-- check each result, and insert into frontiers if not already visited
 					for index, vertex in ipairs(successors) do
@@ -131,6 +132,7 @@ return {
 						else
 							increment(stats, "discarded_successor_visited")
 						end
+						increment(stats, "successor_result_total")
 					end
 					-- mark this node visited
 					visitor(frontier)
