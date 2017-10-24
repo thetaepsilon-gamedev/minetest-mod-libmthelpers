@@ -39,8 +39,12 @@ algorithms.node_virus = function(initialpos, victimname, replacement, markernode
 	end
 
 	local markerfn = nil
+	local testvertex = nil
 	if markernode then
 		markerfn = function(pos) minetest.swap_node(pos, markernode) end
+	else
+		-- only enable if not using a marker node
+		testvertex = function(pos) return minetest.get_node(pos).name == victimname end
 	end
 	local visitor = function(pos) minetest.swap_node(pos, replacement) end
 
@@ -48,6 +52,7 @@ algorithms.node_virus = function(initialpos, victimname, replacement, markernode
 		visitor=visitor,
 		debugger=debugger,
 		markfrontier=markerfn,
+		testvertex = testvertex
 	})
 end
 
