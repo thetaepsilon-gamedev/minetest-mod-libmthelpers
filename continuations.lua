@@ -76,10 +76,10 @@ end
 -- this currently only works on invocation count basis, not elapsed time,
 -- so this should be used either with a conservative batch count,
 -- or a relatively predictable processing function.
-local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
+local loop_batch = function(enqueuer, closure, opts, maxbatch)
 	local dname = "loop_batch()"
 	-- crash early to avoid confusing errors from async later on...
-	if type(callback) ~= "function" then error(dname.." callback mush be a function!") end
+	if type(closure) ~= "function" then error(dname.." closure mush be a function!") end
 	local debugger = getdebugger(opts, dname)
 	local batch_process = function()
 		local sname = "batch_process() "
@@ -87,14 +87,7 @@ local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
 		local count = 0
 		local stop = false
 		while true do
-			local nextitem = iterator()
-			debugger(sname.."nextitem="..tostring(nextitem))
-			if nextitem == nil then
-				debugger(sname.."stopping due to iterator end")
-				stop = true
-				break
-			end
-			if not callback(nextitem) then
+			if not closure() then
 				debugger(sname.."stopping as callback returned false")
 				stop = true
 				break
@@ -118,7 +111,8 @@ continuations.loop_batch = loop_batch
 local mkarrayiterator = modhelpers.iterators.mkarrayiterator
 continuations.loop_batch_array = function(enqueuer, opts, callback, array, maxbatch)
 	local iterator = mkarrayiterator(array)
-	loop_batch(enqueuer, opts, callback, iterator, maxbatch)
+	local closure = iterator_continuation(iterator, callback)
+	loop_batch(enqueuer, closure, opts, maxbatch)
 end
 
 
