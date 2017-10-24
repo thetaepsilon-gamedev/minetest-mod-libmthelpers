@@ -58,7 +58,7 @@ algorithms.make_node_virus = make_node_virus
 
 local offsets = modhelpers.coords.adjacent_offsets
 --local offsets = {x=0,y=-1,z=0}
-algorithms.node_virus = algorithms.node_virus = function(initialpos, victimname, replacement, markernode, debugger, localdebugger)
+algorithms.node_virus = function(initialpos, victimname, replacement, markernode, debugger, localdebugger)
 	return make_node_virus(initialpos, offsets, victimname, replacement, markernode, debugger, localdebugger)
 end
 
