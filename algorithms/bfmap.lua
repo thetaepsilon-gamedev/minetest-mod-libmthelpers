@@ -130,6 +130,7 @@ return {
 					self.visited[frontier_hash] = true
 				else
 					debugger(dname.."frontier DISCARED by testvertex")
+					increment(stats, "frontier_vertex_discarded")
 				end
 
 				increment(stats, "total_step_count")
