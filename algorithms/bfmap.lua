@@ -94,6 +94,7 @@ return {
 		local interface = {
 			advance = function()
 				if self.finished then return false end
+				local stats = self.stats
 
 				local dname = "bfmap.advance() "
 				debugger(dname.."entry")
@@ -131,6 +132,7 @@ return {
 					debugger(dname.."frontier DISCARED by testvertex")
 				end
 
+				increment(stats, "total_step_count")
 				return true
 			end,
 			stats = function() return self.stats end,
