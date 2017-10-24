@@ -70,6 +70,8 @@ return {
 			-- already-visited nodes are checked for in successor vertexes.
 			visited = {},
 		}
+		-- add initial vertex to start off process
+		self.frontiers.enqueue(initial)
 		local interface = {
 			advance = function()
 				local frontier = self.frontiers.next()
@@ -78,7 +80,7 @@ return {
 
 				if testvertex(frontier) then
 					-- get successors of this vertex
-					local successors = successor(vertex)
+					local successors = successor(frontier)
 					-- check each result, and insert into frontiers if not already visited
 					for index, vertex in ipairs(successors) do
 						local hash = hasher(vertex)
