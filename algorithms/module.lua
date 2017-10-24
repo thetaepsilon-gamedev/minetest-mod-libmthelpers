@@ -19,16 +19,19 @@ local centerpos = modhelpers.playerpos.center_on_node
 local hasher = function(vertex) return minetest.hash_node_position(centerpos(vertex)) end
 local offsets = modhelpers.coords.adjacent_offsets
 
---local formatvec = modhelpers.coords.format
-algorithms.node_virus = function(initialpos, victimname, replacement, debugger)
+local formatvec = modhelpers.coords.format
+algorithms.node_virus = function(initialpos, victimname, replacement, debugger, localdebugger)
 	local successor = function(vertex)
 		--debugger("node virus successor")
 		--debugger("vertex="..formatvec(vertex))
 		local results = {}
 		for _, offset in ipairs(offsets) do
 			local pos = vector.add(vertex, offset)
-			if minetest.get_node(pos).name == victimname then
+			local nodename = minetest.get_node(pos).name
+			if nodename == victimname then
 				table.insert(results, pos)
+			else
+				if localdebugger then localdebugger("REJECTED victim node, pos="..formatvec(pos).." name="..nodename) end
 			end
 		end
 		return results
