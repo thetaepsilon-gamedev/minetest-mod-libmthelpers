@@ -37,8 +37,13 @@ for _, entry in ipairs(regtable) do
 	scriptname = (scriptname or componentname)
 
 	local scriptpath = ""
+	_mod.moduledir = nil
 	if isdir then
-		scriptpath = modpath..dirpathsep..scriptname..dirpathsep.."module.lua"
+		local scriptdir = modpath..dirpathsep..scriptname..dirpathsep
+		scriptpath = scriptdir.."module.lua"
+		-- temporarily set module subdirectory so script can see it
+		-- why is there not a way to pass arguments to dofile()!?
+		_mod.moduledir = scriptdir
 	else
 		scriptpath = modpath..dirpathsep..scriptname..".lua"
 	end
