@@ -44,6 +44,7 @@ return {
 	--	if it returns false the frontier vertex is simply discarded.
 	--	visitor: called when vertex is added to the visited list.
 	--	debugger: called with trace point messages if it exists.
+	--	markfrontier: called when a vertex is added as a frontier.
 	-- if initial is nil, advance() below is guaranteed to return false on first invocation.
 	new = function(initial, successor, hasher, callbacks)
 		-- note that queues reject nil items,
@@ -62,6 +63,7 @@ return {
 		local testvertex = callback_or_missing(callbacks, "testvertex", passthrough)
 		local visitor = callback_or_missing(callbacks, "visitor", stub)
 		local debugger = callback_or_missing(callbacks, "debugger", stub)
+		local markfrontier = callback_or_missing(callbacks, "markfrontier", stub)
 		debugger(dname_new.."entry, callbacks ready")
 
 		-- now onto the actual algorith data/code
@@ -94,6 +96,7 @@ return {
 					for index, vertex in ipairs(successors) do
 						local hash = hasher(vertex)
 						if not self.visited[hash] then
+							markfrontier(vertex)
 							self.frontiers.enqueue(vertex)
 						end
 					end
