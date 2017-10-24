@@ -9,6 +9,7 @@ return {
 		}
 		local interface = {
 			enqueue = function(item)
+				if item == nil then return false end
 				local currenttail = self.tail
 				local element = { item, nil }
 				-- add item on tail to enqueue at back.
@@ -22,6 +23,7 @@ return {
 					self.tail = element
 				end
 				self.count = self.count + 1
+				return true
 			end,
 			next = function()
 				local ret = nil
