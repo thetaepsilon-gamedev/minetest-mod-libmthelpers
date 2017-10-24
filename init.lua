@@ -26,7 +26,8 @@ local regtable = {
 	{ "stats" },
 	{ "readonly" },
 	{ "iterators" },
-	{ "datastructs" },
+	-- this module sits in a subdirectory due to the length of code
+	{ "datastructs", nil, true },
 	{ "continuations" },
 }
 
