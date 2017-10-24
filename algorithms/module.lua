@@ -21,7 +21,7 @@ local hasher = function(vertex) return minetest.hash_node_position(centerpos(ver
 
 local formatvec = modhelpers.coords.format
 local shallowcopy = modhelpers.tableutils.shallowcopy
-local make_node_virus = function(initialpos, offsets, victimname, replacement, markernode, callbacks, localdebugger)
+local make_node_virus = function(initialpos, offsets, victimname, replacement, markernode, callbacks, readonly, localdebugger)
 	local successor = function(vertex)
 		--debugger("node virus successor")
 		--debugger("vertex="..formatvec(vertex))
@@ -49,11 +49,13 @@ local make_node_virus = function(initialpos, offsets, victimname, replacement, m
 
 	callbacks = shallowcopy(callbacks)
 	local oldvisitor = callbacks.visitor
-	local visitor = function(pos)
-		minetest.swap_node(pos, replacement)
-		if oldvisitor then oldvisitor(pos) end
+	if not readonly then
+		local visitor = function(pos)
+			minetest.swap_node(pos, replacement)
+			if oldvisitor then oldvisitor(pos) end
+		end
+		callbacks.visitor = visitor
 	end
-	callbacks.visitor = visitor
 	callbacks.markfrontier = markerfn
 	callbacks.testvertex = testvertex
 	return algorithms.new.bfmap(initialpos, successor, hasher, callbacks, {})
@@ -62,8 +64,8 @@ algorithms.make_node_virus = make_node_virus
 
 local offsets = modhelpers.coords.neighbour_offsets
 --local offsets = {x=0,y=-1,z=0}
-algorithms.node_virus = function(initialpos, victimname, replacement, markernode, callbacks, localdebugger)
-	return make_node_virus(initialpos, offsets, victimname, replacement, markernode, callbacks, localdebugger)
+algorithms.node_virus = function(initialpos, victimname, replacement, markernode, callbacks, readonly, localdebugger)
+	return make_node_virus(initialpos, offsets, victimname, replacement, markernode, callbacks, readonly, localdebugger)
 end
 
 
