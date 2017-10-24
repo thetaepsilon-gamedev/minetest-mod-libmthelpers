@@ -70,4 +70,30 @@ end
 
 
 
+-- stripped form of the above for searching nodes.
+-- takes a function which is provided the node data to determine if the node should be considered.
+local make_searcher = function(initialpos, neighbourfn, callbacks)
+	local successor = function(vertex)
+		local results = {}
+		for _, offset in ipairs(offsets) do
+			local pos = vector.add(vertex, offset)
+			local neighbour = minetest.get_node(pos)
+			if neighbourfn(neighbour) then
+				table.insert(results, pos)
+			end
+		end
+		return results
+	end
+
+	--local testvertex = nil
+	local testvertex = function(pos) return neighbourfn(minetest.get_node(pos)) end
+
+	callbacks = shallowcopy(callbacks)
+	callbacks.testvertex = testvertex
+	return algorithms.new.bfmap(initialpos, successor, hasher, callbacks, {})
+end
+algorithms.node_finder = make_searcher
+
+
+
 return algorithms
