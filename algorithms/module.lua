@@ -46,9 +46,13 @@ local make_node_virus = function(initialpos, offsets, victimname, replacement, m
 		-- only enable if not using a marker node
 		testvertex = function(pos) return minetest.get_node(pos).name == victimname end
 	end
-	local visitor = function(pos) minetest.swap_node(pos, replacement) end
 
 	callbacks = shallowcopy(callbacks)
+	local oldvisitor = callbacks.visitor
+	local visitor = function(pos)
+		minetest.swap_node(pos, replacement)
+		if oldvisitor then oldvisitor(pos) end
+	end
 	callbacks.visitor = visitor
 	callbacks.markfrontier = markerfn
 	callbacks.testvertex = testvertex
