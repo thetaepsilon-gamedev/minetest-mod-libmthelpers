@@ -122,6 +122,7 @@ return {
 						local hash = hasher(vertex)
 						if not self.visited[hash] and not self.pending[hash] then
 							markfrontier(vertex)
+							self.pending[hash] = true
 							self.frontiers.enqueue(vertex)
 						end
 					end
