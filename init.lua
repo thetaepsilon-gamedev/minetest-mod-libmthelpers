@@ -1,5 +1,7 @@
 modhelpers = {}
 _mod = {}
+-- dependencies table for passing in needed objects to sub-modules
+_deps = {}
 
 local modname = minetest.get_current_modname()
 local modpath = minetest.get_modpath(modname)
@@ -57,3 +59,4 @@ for _, entry in ipairs(regtable) do
 end
 
 _mod = nil
+_deps = nil
