@@ -20,6 +20,7 @@ local getdebugger = function(opts, dname)
 end
 local loop_repeat = function(enqueuer, closure, opts)
 	local dname = "loop_repeat()"
+	if type(closure) ~= "function" then error(dname.." callback mush be a function!") end
 	if type(opts) ~= "table" then opts = {} end
 
 	local delay = opts.delay
@@ -58,6 +59,8 @@ end
 -- or a relatively predictable processing function.
 local loop_batch = function(enqueuer, opts, callback, iterator, maxbatch)
 	local dname = "loop_batch()"
+	-- crash early to avoid confusing errors from async later on...
+	if type(callback) ~= "function" then error(dname.." callback mush be a function!") end
 	local debugger = getdebugger(opts, dname)
 	local batch_process = function()
 		local sname = "batch_process() "
