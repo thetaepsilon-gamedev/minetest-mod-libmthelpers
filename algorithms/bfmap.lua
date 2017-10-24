@@ -88,7 +88,7 @@ return {
 					end
 					-- mark this node visited
 					visitor(frontier)
-					self.visited[hash(frontier)] = true
+					self.visited[hasher(frontier)] = true
 				end
 
 				return true
