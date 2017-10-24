@@ -125,7 +125,11 @@ return {
 								markfrontier(vertex)
 								self.pending[hash] = true
 								self.frontiers.enqueue(vertex)
+							else
+								increment(stats, "discarded_successor_pending")
 							end
+						else
+							increment(stats, "discarded_successor_visited")
 						end
 					end
 					-- mark this node visited
