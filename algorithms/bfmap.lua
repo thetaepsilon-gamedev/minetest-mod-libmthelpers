@@ -46,6 +46,9 @@ return {
 	--	debugger: called with trace point messages if it exists.
 	--	markfrontier: called when a vertex is added as a frontier.
 	-- if initial is nil, advance() below is guaranteed to return false on first invocation.
+	-- note that if any callbacks edit the graph nodes during or between advance steps
+	-- (e.g. by editing the world, changing the outcome of the successor function),
+	-- it is recommended to provide the testvertex callback.
 	new = function(initial, successor, hasher, callbacks)
 		-- note that queues reject nil items,
 		-- so if initial is nil the queue will be empty.
