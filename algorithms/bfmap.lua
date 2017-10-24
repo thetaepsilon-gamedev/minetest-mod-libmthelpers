@@ -120,10 +120,12 @@ return {
 					-- check each result, and insert into frontiers if not already visited
 					for index, vertex in ipairs(successors) do
 						local hash = hasher(vertex)
-						if not self.visited[hash] and not self.pending[hash] then
-							markfrontier(vertex)
-							self.pending[hash] = true
-							self.frontiers.enqueue(vertex)
+						if not self.visited[hash] then
+							if not self.pending[hash] then
+								markfrontier(vertex)
+								self.pending[hash] = true
+								self.frontiers.enqueue(vertex)
+							end
 						end
 					end
 					-- mark this node visited
