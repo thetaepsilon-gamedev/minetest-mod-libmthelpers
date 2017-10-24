@@ -45,6 +45,7 @@ return {
 	--	visitor: called when vertex is added to the visited list.
 	--	debugger: called with trace point messages if it exists.
 	--	markfrontier: called when a vertex is added as a frontier.
+	--	finished: called when the graph has been exhaustively mapped.
 	-- if initial is nil, advance() below is guaranteed to return false on first invocation.
 	-- note that if any callbacks edit the graph nodes during or between advance steps
 	-- (e.g. by editing the world, changing the outcome of the successor function),
@@ -67,6 +68,7 @@ return {
 		local visitor = callback_or_missing(callbacks, "visitor", stub)
 		local debugger = callback_or_missing(callbacks, "debugger", stub)
 		local markfrontier = callback_or_missing(callbacks, "markfrontier", stub)
+		local oncompleted = callback_or_missing(callbacks, "finished", stub)
 		debugger(dname_new.."entry, callbacks ready")
 
 		-- now onto the actual algorith data/code
@@ -80,17 +82,26 @@ return {
 			-- cache of pending frontiers.
 			-- used to avoid re-adding a vertex if it's already pending
 			pending = {},
+			-- flag to indicate completion.
+			-- used so the completion callback is only invoked once.
+			finished = false,
 		}
 		-- add initial vertex to start off process
 		self.frontiers.enqueue(initial)
 		local interface = {
 			advance = function()
+				if self.finished then return false end
+
 				local dname = "bfmap.advance() "
 				debugger(dname.."entry")
 				local frontier = self.frontiers.next()
 
 				-- if the frontier list is empty, we're done.
-				if frontier == nil then return false end
+				if frontier == nil then
+					self.finished = true
+					oncompleted()
+					return false
+				end
 				debugger(dname.."got frontier: "..tostring(frontier))
 
 				-- remove this node from pending frontiers if it's allowed
