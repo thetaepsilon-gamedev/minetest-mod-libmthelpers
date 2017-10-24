@@ -29,5 +29,17 @@ coords.adjacent_offsets = {
 	{x= 0,y= 0,z= 1},
 	{x= 0,y= 0,z=-1},
 }
+local diagonals = {}
+for x = -1, 1, 1 do
+for y = -1, 1, 1 do
+for z = -1, 1, 1 do
+	if not (x == 0 and y == 0 and z == 0) then
+		print("x="..x.." y="..y.." z="..z)
+		table.insert(diagonals, vector.new(x,y,z))
+	end
+end
+end
+end
+coords.neighbour_offsets = diagonals
 
 return coords
