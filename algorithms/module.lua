@@ -3,7 +3,8 @@ algorithms.new = {}
 local dir = _mod.moduledir
 
 _deps.bfmap = {
-	newqueue = modhelpers.datastructs.new.queue
+	newqueue = modhelpers.datastructs.new.queue,
+	increment = modhelpers.stats.increment_counter,
 }
 local bfmap = dofile(dir.."bfmap.lua")
 algorithms.new.bfmap = bfmap.new

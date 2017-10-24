@@ -3,6 +3,7 @@
 -- this algorithm attempts to exhaustively map a graph of connected neighbours (up to a limit).
 -- otherwise though this is as generic as the algorithm example found on wikipedia.
 local newqueue = _deps.bfmap.newqueue
+local increment = _deps.bfmap.increment
 
 local checkfn = function(f, label, callername)
 	if type(f) ~= "function" then
@@ -85,6 +86,8 @@ return {
 			-- flag to indicate completion.
 			-- used so the completion callback is only invoked once.
 			finished = false,
+			-- various statistical data gathered during the run
+			stats = {},
 		}
 		-- add initial vertex to start off process
 		self.frontiers.enqueue(initial)
@@ -129,7 +132,8 @@ return {
 				end
 
 				return true
-			end
+			end,
+			stats = function() return self.stats end,
 		}
 		return interface
 	end
