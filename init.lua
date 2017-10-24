@@ -19,9 +19,9 @@ if minetest.global_exists("modns") then reg = modns end
 -- note that some components depend on others here,
 -- accessed by using the modhelpers global.
 local regtable = {
-	{ "coords" },
 	{ "prettyprint" },
 	{ "tableutils" },
+	{ "coords" },
 	{ "playerpos" },
 	{ "check", "checkers" },	-- filename doesn't fit pattern
 	{ "facedir" },
