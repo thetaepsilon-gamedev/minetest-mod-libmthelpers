@@ -53,6 +53,25 @@ end
 
 
 
+-- make a continuation which invokes a function on the result of an iterator.
+-- requests to stop when the iterator returns nil.
+-- else, invokes callback on the value obtained from iterator.
+-- callback is expected to itself indicate it doesn't want to continue also.
+local iterator_continuation = function(iterator, callback)
+	return function()
+		local continuing = true
+		local item = iterator()
+		if item == nil then
+			continuing = false
+		else
+			continuing = callback(item)
+		end
+		return continuing
+	end
+end
+
+
+
 -- batches several repeated operations up to a limit.
 -- this currently only works on invocation count basis, not elapsed time,
 -- so this should be used either with a conservative batch count,
