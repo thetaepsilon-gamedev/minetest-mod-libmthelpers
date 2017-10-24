@@ -17,11 +17,9 @@ _deps.bfmap = nil
 -- the visitor function swaps the node with the replacement.
 local centerpos = modhelpers.playerpos.center_on_node
 local hasher = function(vertex) return minetest.hash_node_position(centerpos(vertex)) end
-local offsets = modhelpers.coords.adjacent_offsets
---local offsets = {x=0,y=-1,z=0}
 
 local formatvec = modhelpers.coords.format
-algorithms.node_virus = function(initialpos, victimname, replacement, markernode, debugger, localdebugger)
+local make_node_virus = function(initialpos, offsets, victimname, replacement, markernode, debugger, localdebugger)
 	local successor = function(vertex)
 		--debugger("node virus successor")
 		--debugger("vertex="..formatvec(vertex))
@@ -55,6 +53,13 @@ algorithms.node_virus = function(initialpos, victimname, replacement, markernode
 		testvertex = testvertex,
 	}, {
 	})
+end
+algorithms.make_node_virus = make_node_virus
+
+local offsets = modhelpers.coords.adjacent_offsets
+--local offsets = {x=0,y=-1,z=0}
+algorithms.node_virus = algorithms.node_virus = function(initialpos, victimname, replacement, markernode, debugger, localdebugger)
+	return make_node_virus(initialpos, offsets, victimname, replacement, markernode, debugger, localdebugger)
 end
 
 
