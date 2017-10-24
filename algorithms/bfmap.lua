@@ -74,6 +74,9 @@ return {
 			-- discovered node list, hashed by the hasher function.
 			-- already-visited nodes are checked for in successor vertexes.
 			visited = {},
+			-- cache of pending frontiers.
+			-- used to avoid re-adding a vertex if it's already pending
+			pending = {},
 		}
 		-- add initial vertex to start off process
 		self.frontiers.enqueue(initial)
@@ -87,6 +90,10 @@ return {
 				if frontier == nil then return false end
 				debugger(dname.."got frontier: "..tostring(frontier))
 
+				-- remove this node from pending frontiers if it's allowed
+				local frontier_hash = hasher(frontier)
+				self.pending[frontier_hash] = false
+
 				if testvertex(frontier) then
 					debugger(dname.."frontier passed testvertex")
 					-- get successors of this vertex
@@ -95,14 +102,14 @@ return {
 					-- check each result, and insert into frontiers if not already visited
 					for index, vertex in ipairs(successors) do
 						local hash = hasher(vertex)
-						if not self.visited[hash] then
+						if not self.visited[hash] and not self.pending[hash] then
 							markfrontier(vertex)
 							self.frontiers.enqueue(vertex)
 						end
 					end
 					-- mark this node visited
 					visitor(frontier)
-					self.visited[hasher(frontier)] = true
+					self.visited[frontier_hash] = true
 				else
 					debugger(dname.."frontier DISCARED by testvertex")
 				end
