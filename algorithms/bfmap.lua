@@ -43,6 +43,7 @@ return {
 	--	testvertex: additional test stage when frontier is popped from queue.
 	--	if it returns false the frontier vertex is simply discarded.
 	--	visitor: called when vertex is added to the visited list.
+	--	debugger: called with trace point messages if it exists.
 	-- if initial is nil, advance() below is guaranteed to return false on first invocation.
 	new = function(initial, successor, hasher, callbacks)
 		-- note that queues reject nil items,
@@ -60,6 +61,8 @@ return {
 		end
 		local testvertex = callback_or_missing(callbacks, "testvertex", passthrough)
 		local visitor = callback_or_missing(callbacks, "visitor", stub)
+		local debugger = callback_or_missing(callbacks, "debugger", stub)
+		debugger(dname_new.."entry, callbacks ready")
 
 		-- now onto the actual algorith data/code
 		local self = {
@@ -74,13 +77,19 @@ return {
 		self.frontiers.enqueue(initial)
 		local interface = {
 			advance = function()
+				local dname = "bfmap.advance() "
+				debugger(dname.."entry")
 				local frontier = self.frontiers.next()
+
 				-- if the frontier list is empty, we're done.
 				if frontier == nil then return false end
+				debugger(dname.."got frontier: "..tostring(frontier))
 
 				if testvertex(frontier) then
+					debugger(dname.."frontier passed testvertex")
 					-- get successors of this vertex
 					local successors = successor(frontier)
+					debugger(dname.."successor ran successfully, result="..tostring(successors))
 					-- check each result, and insert into frontiers if not already visited
 					for index, vertex in ipairs(successors) do
 						local hash = hasher(vertex)
@@ -91,6 +100,8 @@ return {
 					-- mark this node visited
 					visitor(frontier)
 					self.visited[hasher(frontier)] = true
+				else
+					debugger(dname.."frontier DISCARED by testvertex")
 				end
 
 				return true
