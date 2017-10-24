@@ -52,7 +52,8 @@ algorithms.node_virus = function(initialpos, victimname, replacement, markernode
 		visitor=visitor,
 		debugger=debugger,
 		markfrontier=markerfn,
-		testvertex = testvertex
+		testvertex = testvertex,
+	}, {
 	})
 end
 

@@ -49,7 +49,7 @@ return {
 	-- note that if any callbacks edit the graph nodes during or between advance steps
 	-- (e.g. by editing the world, changing the outcome of the successor function),
 	-- it is recommended to provide the testvertex callback.
-	new = function(initial, successor, hasher, callbacks)
+	new = function(initial, successor, hasher, callbacks, opts)
 		-- note that queues reject nil items,
 		-- so if initial is nil the queue will be empty.
 		-- this gives us the behaviour for advance() as stated above.
