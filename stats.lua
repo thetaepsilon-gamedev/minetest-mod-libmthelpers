@@ -56,4 +56,11 @@ local show_nodes_by_modname = function(printer)
 end
 stats.show_nodes_by_modname = show_nodes_by_modname
 
+stats.increment_counter = function(t, countername)
+	local count = t[countername]
+	if count == nil then count = 0 end
+	count = count + 1
+	t[countername] = count
+end
+
 return stats
