@@ -70,6 +70,10 @@ return {
 		local debugger = callback_or_missing(callbacks, "debugger", stub)
 		local markfrontier = callback_or_missing(callbacks, "markfrontier", stub)
 		local oncompleted = callback_or_missing(callbacks, "finished", stub)
+		local vertexlimit = opts.vertexlimit
+		if type(vertexlimit) ~= "number" or vertexlimit < 0 then
+			vertexlimit = nil
+		end
 		debugger(dname_new.."entry, callbacks ready")
 
 		-- now onto the actual algorith data/code
@@ -88,6 +92,13 @@ return {
 			finished = false,
 			-- various statistical data gathered during the run
 			stats = {},
+			-- separate node count which is checked against vertexlimit.
+			-- any frontiers popped when vertexlimit is met or exceeeded are skipped.
+			vertexcount = 0,
+			-- vertex set to which skipped frontiers are added.
+			-- can be queried when the algorithm is complete.
+			-- utilises hasher so that "equal" vertexes are not inserted twice.
+			limitskipped = {}
 		}
 		-- add initial vertex to start off process
 		self.frontiers.enqueue(initial)
