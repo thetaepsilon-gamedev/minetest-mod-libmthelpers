@@ -1,9 +1,11 @@
+local factory = function(deps)
+
 -- abstract breadth-first graph mapping.
 -- unlike a breadth-first *search* which terminates when finding a success state,
 -- this algorithm attempts to exhaustively map a graph of connected neighbours (up to a limit).
 -- otherwise though this is as generic as the algorithm example found on wikipedia.
-local newqueue = _deps.bfmap.newqueue
-local increment = _deps.bfmap.increment
+local newqueue = deps.new.queue
+local increment = deps.increment_counter
 
 local checkfn = function(f, label, callername)
 	if type(f) ~= "function" then
@@ -162,3 +164,6 @@ return {
 		return interface
 	end
 }
+
+end -- factory()
+return factory
