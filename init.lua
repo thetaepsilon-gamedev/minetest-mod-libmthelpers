@@ -31,7 +31,7 @@ local regtable = {
 	-- this module sits in a subdirectory due to the length of code
 	{ "datastructs", nil, true },
 	{ "continuations" },
-	{ "algorithms", nil, true },
+	--{ "algorithms", nil, true },
 }
 
 for _, entry in ipairs(regtable) do
