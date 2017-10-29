@@ -34,7 +34,7 @@ for x = -1, 1, 1 do
 for y = -1, 1, 1 do
 for z = -1, 1, 1 do
 	if not (x == 0 and y == 0 and z == 0) then
-		print("x="..x.." y="..y.." z="..z)
+		--print("x="..x.." y="..y.." z="..z)
 		table.insert(diagonals, vector.new(x,y,z))
 	end
 end
