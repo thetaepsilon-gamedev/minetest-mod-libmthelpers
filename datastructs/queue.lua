@@ -41,6 +41,10 @@ return {
 			end,
 			size = function() return self.count end,
 		}
+		-- next() already satisfies iterator requirements, just return that
+		interface.iterator = function()
+			return interface.next
+		end
 		return interface
 	end,
 }
