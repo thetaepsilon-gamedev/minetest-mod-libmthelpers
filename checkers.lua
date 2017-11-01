@@ -43,6 +43,20 @@ end
 
 
 
+-- convienience boilerplate for checking if a value is a function.
+-- returns the value if valid, else throws an error.
+check.mkfnexploder = function(callername)
+	return function(val, label)
+		if type(label) == nil then label = "checked value" end
+		if type(val) ~= "function" then
+			error(callername..": "..tostring(label).." expected to be a function, got "..tostring(val))
+		end
+		return val
+	end
+end
+
+
+
 -- the following functions do NOT throw errors but are tests only
 -- used among other things for the set datatype self-tests in the assertion statements.
 local tabletest = function(val)
