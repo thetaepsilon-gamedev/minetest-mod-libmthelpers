@@ -34,9 +34,17 @@ check.range = rangecheck
 
 
 check.mkassert = function(caller)
-	return function(condition, message)
+	return function(condition, message, extradata)
 		if not condition then
-			error(caller..": "..message)
+			local extra=""
+			if type(extradata) == "table" then
+				for key, value in pairs(extradata) do
+					extra = extra.." "..key.."="..value
+				end
+			elseif extradata ~= nil then
+				extra = "data="..tostring(extradata)
+			end
+			error(caller..": "..message..extra)
 		end
 	end
 end
