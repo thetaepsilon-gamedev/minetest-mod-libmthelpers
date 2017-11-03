@@ -47,4 +47,19 @@ tableutils.overlay = function(t, o)
 	return result
 end
 
+-- search for a value in a table.
+-- returns found key or nil.
+-- optionally takes a comparator argument.
+tableutils.search = function(t, v, comp)
+	if comp == nil then comp = function(a, b) return a == b end end
+	local result = nil
+	for key, value in pairs(t) do
+		if comp(value, v) then
+			result = key
+			break
+		end
+	end
+	return result
+end
+
 return tableutils
