@@ -74,4 +74,18 @@ tableutils.getsingle = function(t)
 	return  rk, rv
 end
 
+-- convert an array-like list into a table with mapped keys,
+-- using a provided function to generate keys.
+-- useful for clearing values out of tables:
+-- if f is applied to a value and that key is present in the map table,
+-- that key can be removed directly instead of a linear search through the list.
+local arraytomap = function(t, f)
+	local result = {}
+	for _, value in ipairs(t) do
+		result[f(value)] = value
+	end
+	return result
+end
+tableutils.arraytomap = arraytomap
+
 return tableutils
