@@ -62,4 +62,16 @@ tableutils.search = function(t, v, comp)
 	return result
 end
 
+-- get the first item from a table pairs() iteration.
+-- used when an item is needed but items might be removed between calls.
+-- returns *two* values, the key and the item.
+-- returns nil, nil if the table is empty.
+tableutils.getsingle = function(t)
+	local rk, rv
+	for k, v in pairs(t) do
+		rk, rv = k, v
+	end
+	return  rk, rv
+end
+
 return tableutils
