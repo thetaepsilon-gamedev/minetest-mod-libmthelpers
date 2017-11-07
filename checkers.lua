@@ -65,6 +65,28 @@ end
 
 
 
+-- make a reference counter to track the number of holders of an object.
+-- you could just use a plain integer for this,
+-- but this object can be passed by reference and handles the boilerplate.
+-- you can also pass the decrement function by value to isolate the refcounter's incrementer.
+check.mkrefcounter = function()
+	local refcount = 0
+	local interface = {}
+
+	interface.increment = function()
+		refcount = refcount + 1
+	end
+	interface.decrement = function()
+		if refcount < 0 then error("refcounter underflow!") end
+		refcount = refcount - 1
+	end
+	interface.get = function() return refcount end
+
+	return interface
+end
+
+
+
 -- the following functions do NOT throw errors but are tests only
 -- used among other things for the set datatype self-tests in the assertion statements.
 local tabletest = function(val)
