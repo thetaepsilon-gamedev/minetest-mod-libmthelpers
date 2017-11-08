@@ -21,6 +21,7 @@ local repstr = function(base, count)
 	end
 	return ret
 end
+prettyprint.repstr = repstr
 
 -- forward declaration for cyclic recursive calling
 local tabletostring
