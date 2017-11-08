@@ -3,6 +3,8 @@ local interface = {}
 local mkfnexploder = modhelpers.check.mkfnexploder
 local mkrefcounter = modhelpers.check.mkrefcounter
 
+local repstr = modhelpers.prettyprint.repstr
+
 local d = function(value, default)
 	if value == nil then
 		value = default
@@ -41,10 +43,9 @@ local create_event = function(label, timerfunc, store, onstop)
 		tstop = timerfunc()
 		checkrefcount()
 
-		store[label] = {
-			duration = tstop - tstart,
-			sub = subtable
-		}
+		store.label = label
+		store.duration = tstop - tstart
+		store.sub = subtable
 		onstop()
 	end
 	interface.mksub = function(label)
@@ -93,6 +94,25 @@ local create_profiler = function(timerfunc)
 	return interface
 end
 interface.create_profiler = create_profiler
+
+
+
+local self = {}
+local tab = "    "
+local format_event = function(event)
+	return event.label..tab..tostring(event.duration)
+end
+local print_profiler_stats = function(evlist, printer, indentlevel)
+	if indentlevel == nil then indentlevel = 0 end
+	local indent = repstr(tab, indentlevel)
+
+	for index, entry in ipairs(evlist) do
+		printer(indent..format_event(entry))
+		self.f(entry.sub, printer, indentlevel + 1)
+	end
+end
+interface.format_data = print_profiler_stats
+self.f = print_profiler_stats
 
 
 
