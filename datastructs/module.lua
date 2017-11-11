@@ -55,6 +55,9 @@ datastructs.new.set = function()
 	}
 end
 
+local tsi = dofile(moduledir.."tableset.lua")
+datastructs.new.tableset = tsi.new
+
 
 
 local mkassert = modhelpers.check.mkassert
