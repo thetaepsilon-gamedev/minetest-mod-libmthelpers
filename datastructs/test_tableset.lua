@@ -1,3 +1,4 @@
+#!/usr/bin/env lua5.1
 local collect_iterator = function(it)
 	local results = {}
 	for v in it do table.insert(results, v) end
