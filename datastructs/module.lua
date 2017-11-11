@@ -2,61 +2,25 @@ local datastructs = {}
 datastructs.new = {}
 datastructs.selftest = {}
 
-local mk_value_iterator = modhelpers.iterators.mk_value_iterator
-
 local moduledir = _mod.moduledir
+
+
+
 -- FIFO queue structure
 local qi = dofile(moduledir.."queue.lua")
 datastructs.new.queue = qi.new
 
+
+
 -- a "set" structure.
 -- allows adding objects, removing them by value, and iterating through them.
-datastructs.new.set = function()
-	local unique = function(val) return type(val).."!"..tostring(val) end
-	local entries = {}
-	local size = 0
-
-	-- check if an entry is present without inserting it; returns true if so.
-	local test = function(v)
-		local key = unique(v)
-		local exists = (entries[key] ~= nil)
-		return exists
-	end
-
-	return {
-		-- returns true if object was added, false if duplicate insertion
-		add = function(v)
-			local key = unique(v)
-			local isnew = (entries[key] == nil)
-			if isnew then
-				entries[key] = v
-				size = size + 1
-			end
-			return isnew
-		end,
-		-- returns true if item was removed, false if it didn't exist
-		remove = function(v)
-			local didexist = test(v)
-			if didexist then
-				entries[unique(v)] = nil
-				size = size - 1
-			end
-			return didexist
-		end,
-		ismember = test, -- see above
-		iterator = function()
-			return mk_value_iterator(entries)
-		end,
-		size = function()
-			return size
-		end
-	}
-end
-
 _deps.tableset = {}
 _deps.tableset.iterators = modhelpers.iterators
 local tsi = dofile(moduledir.."tableset.lua")
 datastructs.new.tableset = tsi.new
+
+-- alias to old set for backwards compat...
+datastructs.new.set = tsi.mk_unique
 
 
 

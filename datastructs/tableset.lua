@@ -64,4 +64,11 @@ interface.new = function()
 	return mk_generic(function(v) return v end)
 end
 
+-- existing set for backwards compat.
+-- ensures all keys can be unique by tagging them with their type.
+local unique = function(val) return type(val).."!"..tostring(val) end
+interface.mk_unique = function()
+	return mk_generic(unique)
+end
+
 return interface
