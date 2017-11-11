@@ -2,9 +2,7 @@ local datastructs = {}
 datastructs.new = {}
 datastructs.selftest = {}
 
-local mkiterator = modhelpers.iterators.mkiterator
-
-local iterate_values_co = function(t) for _, v in pairs(t) do coroutine.yield(v) end end
+local mk_value_iterator = modhelpers.iterators.mk_value_iterator
 
 local moduledir = _mod.moduledir
 -- FIFO queue structure
@@ -47,7 +45,7 @@ datastructs.new.set = function()
 		end,
 		ismember = test, -- see above
 		iterator = function()
-			return mkiterator(iterate_values_co, entries)
+			return mk_value_iterator(entries)
 		end,
 		size = function()
 			return size
