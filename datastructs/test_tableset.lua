@@ -9,6 +9,7 @@ local collect_set = function(set)
 	return collect_iterator(set.iterator())
 end
 
+local notexists = "object should not be considered present if not previously inserted"
 local test = function(constructor)
 	local set = constructor()
 	local t = {}
@@ -17,7 +18,6 @@ local test = function(constructor)
 	assert(set.size() == 0, "new set should have size zero")
 	assert(#collect_set(set) == 0, "new set should return zero elements")
 
-	local notexists = "object should not be considered present if not previously inserted"
 	assert(not set.ismember(t), notexists)
 	assert(not set.remove(t), notexists)
 
@@ -56,8 +56,34 @@ local test = function(constructor)
 	return "self-tests completed"
 end
 
+local intkeytests = function(constructor)
+	local set = constructor()
+
+	local newelement = "set should be able to accept a new element"
+	assert(set.add(1), newelement)
+	assert(set.add(2), newelement)
+	assert(set.add(3), newelement)
+	assert(set.size() == 3, "set should have size 3 after three insertions")
+	assert(#collect_set(set) == 3, "set should contain three elements after three insertions")
+
+	assert(set.remove(2), "object should have been removed")
+	assert(set.size() == 2, "set should have size 2 after three insertions and one removal")
+	assert(#collect_set(set) == 2, "set should contain two elements after three insertions and one removal")
+
+	assert(not set.remove(4), notexists)
+	assert(not set.ismember(4), notexists)
+
+	return "integer tests completed"
+end
+
+
+
 _deps = {}
 _deps.tableset = {}
 _deps.tableset.iterators = dofile("../iterators.lua")
 local tableset = dofile("tableset.lua")
+
 print(test(tableset.new))
+print(test(tableset.mk_unique))
+print(intkeytests(tableset.mk_unique))
+print("## all test runs ran successfully.")
