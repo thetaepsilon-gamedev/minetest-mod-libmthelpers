@@ -33,6 +33,14 @@ iterators.mkarrayiterator = function(t)
 	return iterators.mkiterator(tableco, t)
 end
 
+-- note that the above uses ipairs and this uses pairs.
+-- both only care about values and not keys;
+-- ipairs guarantees ordering, whereas pairs covers all keys in the table.
+iterators.mk_value_iterator = function(t)
+	local tableco = function(t) for _, v in pairs(t) do coroutine.yield(v) end end
+	return iterators.mkiterator(tableco, t)
+end
+
 
 
 return iterators
