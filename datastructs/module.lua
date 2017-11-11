@@ -53,6 +53,8 @@ datastructs.new.set = function()
 	}
 end
 
+_deps.tableset = {}
+_deps.tableset.iterators = modhelpers.iterators
 local tsi = dofile(moduledir.."tableset.lua")
 datastructs.new.tableset = tsi.new
 

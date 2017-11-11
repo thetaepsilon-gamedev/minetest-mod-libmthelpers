@@ -1,5 +1,8 @@
 local interface = {}
 
+local iterators = _deps.tableset.iterators
+local mk_value_iterator = iterators.mk_value_iterator
+
 -- simplified version of the set data structure for working with table or userdata handles;
 -- it is assumed that inserted values do not alias inside the table (think 0 and "0").
 local new = function()
@@ -38,6 +41,10 @@ local new = function()
 
 	interface.size = function()
 		return size
+	end
+
+	interface.iterator = function()
+		return mk_value_iterator(entries)
 	end
 	
 	return interface
