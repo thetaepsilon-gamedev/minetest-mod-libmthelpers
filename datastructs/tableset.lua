@@ -21,12 +21,18 @@ local mk_generic = function(hasher)
 
 	local interface = {}
 
+	-- internal assignment operation, takes care of adjusting the count.
+	-- should not be called without checking the key doesn't already exist.
+	local overwrite = function(v, hash)
+		entries[hash] = v
+		size = size + 1
+	end
+
 	-- internal insertion operation when hash is already calculated.
 	local tryinsert = function(v, hash)
 		local isnew = (entries[hash] == nil)
 		if isnew then
-			entries[hash] = v
-			size = size + 1
+			overwrite(v, hash)
 		end
 		return isnew
 	end
