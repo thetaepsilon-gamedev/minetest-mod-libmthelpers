@@ -63,7 +63,35 @@ local mk_generic = function(hasher)
 	interface.iterator = function()
 		return mk_value_iterator(entries)
 	end
-	
+
+	-- transactional insert operation:
+	-- either adds the entire provided set of values, expecting them to be new,
+	-- or performs no changes.
+	-- returns a "commit" function that can be called to complete the operation,
+	-- or nil if no changes took place.
+	-- onus is on caller not to modify the set in the meantime.
+	local batch_add = function(values)
+		local mergeset = {}
+		for _, v in ipairs(values) do
+			local hash = hasher(v)
+			if (entries[hash] ~= nil) then
+				return nil
+			else
+				mergeset[hash] = v
+			end
+		end
+		-- if we get this far, it's all unique
+		local breaker = false
+		return function()
+			if breaker then return end
+			breaker = true
+			for hash, v in pairs(mergeset) do
+				overwrite(v, hash)
+			end
+		end
+	end
+	interface.batch_add = batch_add
+
 	return interface
 end
 interface.mk_generic = mk_generic

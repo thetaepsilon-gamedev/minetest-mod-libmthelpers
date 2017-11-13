@@ -10,6 +10,9 @@ local collect_set = function(set)
 end
 
 local notexists = "object should not be considered present if not previously inserted"
+local not_exists_trans = "object should not be inserted by failed transaction"
+local exists_trans = "object expected to be present after completing transaction"
+local expected_committable = "expected to get commit handle for should-be unique values"
 local test = function(constructor)
 	local set = constructor()
 	local t = {}
@@ -52,6 +55,31 @@ local test = function(constructor)
 	local na = { 4 }
 	assert(not set.remove(na), notexists)
 	assert(not set.ismember(na), notexists)
+
+	-- transactionality tests.
+	-- transaction should NOT succeed for an already-added value.
+	local d = { 4 }
+	local e = { 5 }
+	assert(set.batch_add({d, e, a}) == nil, "transaction should fail with already-existing value")
+	-- and should not touch the set's contents
+	local expect_trans_noeffect = function()
+		assert(not set.remove(d), not_exists_trans)
+		assert(not set.remove(e), not_exists_trans)
+		assert(not set.ismember(e), not_exists_trans)
+		assert(not set.ismember(d), not_exists_trans)
+	end
+	expect_trans_noeffect()
+
+	-- but should succeed with unique values.
+	local commit = set.batch_add({d, e})
+	assert(type(commit) == "function", expected_committable)
+	-- don't call the commit, *still* values should not be there
+	-- same behaviour as dropping the commit as the committer function is just thrown away.
+	expect_trans_noeffect()
+	-- *then* commit and check the values are in there
+	commit()
+	assert(set.ismember(d), exists_trans)
+	assert(set.ismember(e), exists_trans)
 
 	return "self-tests completed"
 end
