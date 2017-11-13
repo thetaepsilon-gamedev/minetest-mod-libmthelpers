@@ -80,6 +80,10 @@ local test = function(constructor)
 	commit()
 	assert(set.ismember(d), exists_trans)
 	assert(set.ismember(e), exists_trans)
+	-- transaction should be defused after calling once.
+	set.remove(e)
+	commit()
+	assert(not set.ismember(e), "duplicate commits should have been defused and not re-insert values")
 
 	return "self-tests completed"
 end
