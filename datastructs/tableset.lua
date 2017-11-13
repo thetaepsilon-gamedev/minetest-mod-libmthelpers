@@ -21,9 +21,8 @@ local mk_generic = function(hasher)
 
 	local interface = {}
 
-	-- returns true if object was added, false if duplicate insertion
-	interface.add = function(v)
-		local hash = hasher(v)
+	-- internal insertion operation when hash is already calculated.
+	local tryinsert = function(v, hash)
 		local isnew = (entries[hash] == nil)
 		if isnew then
 			entries[hash] = v
@@ -31,6 +30,12 @@ local mk_generic = function(hasher)
 		end
 		return isnew
 	end
+
+	-- external add operation
+	local add = function(v)
+		return tryinsert(v, hasher(v))
+	end
+	interface.add = add
 
 	-- returns true if item was removed, false if it didn't exist
 	interface.remove = function(v)
