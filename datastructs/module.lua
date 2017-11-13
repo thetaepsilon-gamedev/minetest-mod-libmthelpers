@@ -10,6 +10,11 @@ local moduledir = _mod.moduledir
 local qi = dofile(moduledir.."queue.lua")
 datastructs.new.queue = qi.new
 
+-- mutual exclusion lock.
+-- used in the set structures to provide transactional batch add/removes.
+local mklock = dofile(moduledir.."mutex.lua")
+datastructs.new.mutex = mklock
+
 
 
 -- a "set" structure.
