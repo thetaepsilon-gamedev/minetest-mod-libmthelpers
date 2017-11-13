@@ -23,6 +23,7 @@ _deps.tableset = {}
 _deps.tableset.iterators = modhelpers.iterators
 local tsi = dofile(moduledir.."tableset.lua")
 datastructs.new.tableset = tsi.new
+datastructs.new.generic_set = tsi.mk_generic
 
 -- alias to old set for backwards compat...
 datastructs.new.set = tsi.mk_unique
