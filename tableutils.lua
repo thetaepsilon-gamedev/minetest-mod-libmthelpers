@@ -1,5 +1,7 @@
 local tableutils = {}
 
+local iterate_once = modhelpers.iterators.iterate_once
+
 tableutils.filter = function(table, f)
 	local ret = {}
 	for key, value in pairs(table) do
@@ -67,12 +69,7 @@ end
 -- returns *two* values, the key and the item.
 -- returns nil, nil if the table is empty.
 tableutils.getsingle = function(t)
-	local rk, rv
-	for k, v in pairs(t) do
-		rk, rv = k, v
-		break
-	end
-	return  rk, rv
+	return iterate_once(pairs, t)
 end
 
 -- convert an array-like list into a table with mapped keys,
