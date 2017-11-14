@@ -43,4 +43,15 @@ end
 
 
 
+-- single step wrapper for an iterator.
+-- obeys the expected behaviour for the generic for-loop as per lua documentation.
+-- must be passed the iterator constructor and args to handle the implied state variables.
+local iterate_once = function(constructor, ...)
+	local fn, state, initial = constructor(...)
+	return fn(state, initial)
+end
+iterators.iterate_once = iterate_once
+
+
+
 return iterators
