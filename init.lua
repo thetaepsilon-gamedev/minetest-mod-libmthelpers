@@ -20,6 +20,7 @@ if minetest.global_exists("modns") then reg = modns end
 -- accessed by using the modhelpers global.
 local regtable = {
 	{ "prettyprint" },
+	{ "iterators" },
 	{ "tableutils" },
 	{ "coords" },
 	{ "playerpos" },
@@ -27,7 +28,6 @@ local regtable = {
 	{ "facedir" },
 	{ "stats" },
 	{ "readonly" },
-	{ "iterators" },
 	-- this module sits in a subdirectory due to the length of code
 	{ "datastructs", nil, true },
 	{ "continuations" },
