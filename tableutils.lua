@@ -70,6 +70,7 @@ tableutils.getsingle = function(t)
 	local rk, rv
 	for k, v in pairs(t) do
 		rk, rv = k, v
+		break
 	end
 	return  rk, rv
 end
