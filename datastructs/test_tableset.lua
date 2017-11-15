@@ -85,6 +85,13 @@ local test = function(constructor)
 	commit()
 	assert(not set.ismember(e), "duplicate commits should have been defused and not re-insert values")
 
+	local f = { 6 }
+	local g = { 7 }
+	set.merge({f, g})
+	local postmerge = "object should be present after merge operation"
+	assert(set.ismember(f), postmerge)
+	assert(set.ismember(g), postmerge)
+
 	return "self-tests completed"
 end
 

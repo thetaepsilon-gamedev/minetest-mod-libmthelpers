@@ -92,6 +92,13 @@ local mk_generic = function(hasher)
 	end
 	interface.batch_add = batch_add
 
+	-- batch insert operation where it is not cared about whether some are not inserted.
+	interface.merge = function(values)
+		for _, value in pairs(values) do
+			tryinsert(value, hasher(value))
+		end
+	end
+
 	return interface
 end
 interface.mk_generic = mk_generic
@@ -109,5 +116,7 @@ local unique = function(val) return type(val).."!"..tostring(val) end
 interface.mk_unique = function()
 	return mk_generic(unique)
 end
+
+
 
 return interface
