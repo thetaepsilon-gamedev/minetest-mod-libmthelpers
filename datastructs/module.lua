@@ -22,6 +22,8 @@ datastructs.new.mutex = mklock
 _deps.tableset = {}
 _deps.tableset.iterators = modhelpers.iterators
 local tsi = dofile(moduledir.."tableset.lua")
+datastructs.tableset = tsi
+-- backwards compat aliases...
 datastructs.new.tableset = tsi.new
 datastructs.new.generic_set = tsi.mk_generic
 
