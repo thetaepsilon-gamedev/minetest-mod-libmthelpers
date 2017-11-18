@@ -10,6 +10,6 @@ readonly.shallowcopy = modhelpers.tableutils.shallowcopy
 
 _deps.curry = {}
 _deps.curry.mkfnexploder = mkfnexploder
-readonly.curry = dofile(_mod.scriptdir.."partial_applicatives.lua")
+readonly.curry = dofile(_mod.moduledir.."partial_applicatives.lua")
 
 return readonly
