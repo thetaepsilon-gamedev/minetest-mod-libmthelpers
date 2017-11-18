@@ -11,6 +11,8 @@ local componentbase = "com.github.thetaepsilon.minetest.libmthelpers"
 
 -- FIXME: does this change on non-unixlike targets
 local dirpathsep = "/"
+modpath = modpath..dirpathsep
+_mod.modpath = modpath
 
 local reg = nil
 if minetest.global_exists("modns") then reg = modns end
@@ -43,13 +45,14 @@ for _, entry in ipairs(regtable) do
 	local scriptpath = ""
 	_mod.moduledir = nil
 	if isdir then
-		local scriptdir = modpath..dirpathsep..scriptname..dirpathsep
+		local scriptdir = modpath..scriptname..dirpathsep
 		scriptpath = scriptdir.."module.lua"
 		-- temporarily set module subdirectory so script can see it
 		-- why is there not a way to pass arguments to dofile()!?
 		_mod.moduledir = scriptdir
 	else
 		scriptpath = modpath..dirpathsep..scriptname..".lua"
+		_mod.moduledir = modpath
 	end
 
 	local component = dofile(scriptpath)
