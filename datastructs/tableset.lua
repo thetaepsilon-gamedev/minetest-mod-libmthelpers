@@ -133,8 +133,12 @@ interface.mk_generic = mk_generic
 -- simplified version of the set data structure for working with table or userdata handles;
 -- it is assumed that inserted values do not alias inside the table (think 0 and "0").
 -- hasher is a no-op and passes keys directly to the table to let it do hashing on values internally.
+local noop = function(v) return v end
+interface.new_raw = function()
+	return mk_generic_raw(noop)
+end
 interface.new = function()
-	return mk_generic(function(v) return v end)
+	return mk_generic(noop)
 end
 
 -- existing set for backwards compat.
