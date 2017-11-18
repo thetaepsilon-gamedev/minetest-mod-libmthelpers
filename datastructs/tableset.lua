@@ -107,6 +107,7 @@ local mk_generic_raw = function(hasher)
 	local self = {
 		add = add,
 		remove = remove,
+		ismember = test,
 		iterator = iterator,
 		batch_add = batch_add,
 		merge = merge,
@@ -123,7 +124,7 @@ interface.mk_generic_raw = mk_generic_raw
 -- currified version to preserve existing API
 local mk_generic = function(hasher)
 	local self = mk_generic_raw(hasher)
-	local curried = curryobject(self, {"add", "remove", "iterator", "batch_add", "merge"})
+	local curried = curryobject(self, {"add", "remove", "iterator", "ismember", "batch_add", "merge"})
 	curried.size = function() return self.size end
 	return curried
 end
