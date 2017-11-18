@@ -83,7 +83,7 @@ local batch_add = function(self, values)
 		if breaker then return end
 		breaker = true
 		for hash, v in pairs(mergeset) do
-			overwrite(v, hash)
+			overwrite(self, v, hash)
 		end
 	end
 end
