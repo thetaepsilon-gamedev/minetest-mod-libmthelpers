@@ -22,6 +22,7 @@ datastructs.new.mutex = mklock
 _deps.tableset = {}
 _deps.tableset.iterators = modhelpers.iterators
 _deps.tableset.curryobject = modhelpers.readonly.curry.object
+_deps.tableset.mkfnexploder = modhelpers.check.mkfnexploder
 local tsi = dofile(moduledir.."tableset.lua")
 datastructs.tableset = tsi
 -- backwards compat aliases...
