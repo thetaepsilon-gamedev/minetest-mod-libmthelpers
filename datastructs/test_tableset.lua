@@ -117,9 +117,16 @@ end
 
 
 
+-- bloody hell this manual dependency management...
 _deps = {}
 _deps.tableset = {}
 _deps.tableset.iterators = dofile("../iterators.lua")
+local check = dofile("../checkers.lua")
+_deps.tableset.mkfnexploder = check.mkfnexploder
+_deps.curry = {}
+_deps.curry.mkfnexploder = check.mkfnexploder
+local curry = dofile("../partial_applicatives.lua")
+_deps.tableset.curryobject = curry.object
 local tableset = dofile("tableset.lua")
 
 print(test(tableset.new))
