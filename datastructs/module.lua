@@ -21,6 +21,7 @@ datastructs.new.mutex = mklock
 -- allows adding objects, removing them by value, and iterating through them.
 _deps.tableset = {}
 _deps.tableset.iterators = modhelpers.iterators
+_deps.tableset.curryobject = modhelpers.readonly.curry.object
 local tsi = dofile(moduledir.."tableset.lua")
 datastructs.tableset = tsi
 -- backwards compat aliases...
