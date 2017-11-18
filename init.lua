@@ -57,10 +57,6 @@ for _, entry in ipairs(regtable) do
 
 	local component = dofile(scriptpath)
 	modhelpers[componentname] = component
-	if reg then
-		-- invidual module compatablity aliases
-		modns.register(componentbase.."."..componentname, component, true)
-	end
 end
 if reg then
 	modns.register(componentbase, modhelpers, false)
