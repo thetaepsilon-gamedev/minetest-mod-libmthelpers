@@ -1,7 +1,9 @@
 local interface = {}
 
 local iterators = _deps.tableset.iterators
+local curryobject = _deps.tableset.curryobject
 local mk_value_iterator = iterators.mk_value_iterator
+local mkfnexploder = _deps.tableset.mkfnexploder
 
 -- generic table which takes a "hash function" to calculate keys.
 -- the hash function is expected to produce a "compare equal" quality:
@@ -9,97 +11,121 @@ local mk_value_iterator = iterators.mk_value_iterator
 -- two values which are considered equal for this hasher
 -- (but do not compare directly, e.g. coordinate tables with the same values but different addresses)
 -- must also map to the same hash value.
-local mk_generic = function(hasher)
-	local entries = {}
-	local size = 0
 
-	-- check if an entry is present without inserting it; returns true if so.
-	local test = function(v)
-		local exists = (entries[hasher(v)] ~= nil)
-		return exists
+-- check if an entry is present without inserting it; returns true if so.
+local test = function(self, v)
+	local exists = (self.entries[self.hasher(v)] ~= nil)
+	return exists
+end
+
+-- internal assignment operation, takes care of adjusting the count.
+-- should not be called without checking the key doesn't already exist.
+local overwrite = function(self, v, hash)
+	self.entries[hash] = v
+	self.size = self.size + 1
+end
+
+-- internal insertion operation when hash is already calculated.
+local tryinsert = function(self, v, hash)
+	local isnew = (self.entries[hash] == nil)
+	if isnew then
+		overwrite(self, v, hash)
 	end
+	return isnew
+end
 
-	local interface = {}
 
-	-- internal assignment operation, takes care of adjusting the count.
-	-- should not be called without checking the key doesn't already exist.
-	local overwrite = function(v, hash)
-		entries[hash] = v
-		size = size + 1
+
+-- externally visible operations follow
+-- external add operation
+local add = function(self, v)
+	return tryinsert(self, v, self.hasher(v))
+end
+
+-- returns true if item was removed, false if it didn't exist
+local remove = function(self, v)
+	local hash = self.hasher(v)
+	local e = self.entries
+	local didexist = (e[hash] ~= nil)
+	if didexist then
+		e[hash] = nil
+		self.size = self.size - 1
 	end
+	return didexist
+end
 
-	-- internal insertion operation when hash is already calculated.
-	local tryinsert = function(v, hash)
-		local isnew = (entries[hash] == nil)
-		if isnew then
+-- obtain an iterator over the items of a set
+local iterator = function(self)
+	return mk_value_iterator(self.entries)
+end
+
+-- transactional insert operation:
+-- either adds the entire provided set of values, expecting them to be new,
+-- or performs no changes.
+-- returns a "commit" function that can be called to complete the operation,
+-- or nil if no changes took place.
+-- onus is on caller not to modify the set in the meantime.
+local batch_add = function(self, values)
+	local mergeset = {}
+	local hasher = self.hasher
+	local e = self.entries
+	for _, v in ipairs(values) do
+		local hash = hasher(v)
+		if (e[hash] ~= nil) then
+			return nil
+		else
+			mergeset[hash] = v
+		end
+	end
+	-- if we get this far, it's all unique
+	local breaker = false
+	return function()
+		if breaker then return end
+		breaker = true
+		for hash, v in pairs(mergeset) do
 			overwrite(v, hash)
 		end
-		return isnew
 	end
+end
 
-	-- external add operation
-	local add = function(v)
-		return tryinsert(v, hasher(v))
+-- batch insert operation where it is not cared about whether some are not inserted.
+local merge = function(self, values)
+	local hasher = self.hasher
+	for _, value in pairs(values) do
+		tryinsert(self, value, hasher(value))
 	end
-	interface.add = add
+end
 
-	-- returns true if item was removed, false if it didn't exist
-	interface.remove = function(v)
-		local hash = hasher(v)
-		local didexist = (entries[hash] ~= nil)
-		if didexist then
-			entries[hash] = nil
-			size = size - 1
-		end
-		return didexist
-	end
 
-	interface.ismember = test -- see above
 
-	interface.size = function()
-		return size
-	end
+-- constructor functions.
+-- offer a method table form without closuring to help reduce memory.
+local dname_constructor = "mk_generic_raw()"
+local check_constructor = mkfnexploder(dname_constructor)
+local mk_generic_raw = function(hasher)
+	check_constructor(hasher, "hasher")
+	local self = {
+		add = add,
+		remove = remove,
+		iterator = iterator,
+		batch_add = batch_add,
+		merge = merge,
+	}
 
-	interface.iterator = function()
-		return mk_value_iterator(entries)
-	end
+	self.size = 0
+	self.entries = {}
+	self.hasher = hasher
 
-	-- transactional insert operation:
-	-- either adds the entire provided set of values, expecting them to be new,
-	-- or performs no changes.
-	-- returns a "commit" function that can be called to complete the operation,
-	-- or nil if no changes took place.
-	-- onus is on caller not to modify the set in the meantime.
-	local batch_add = function(values)
-		local mergeset = {}
-		for _, v in ipairs(values) do
-			local hash = hasher(v)
-			if (entries[hash] ~= nil) then
-				return nil
-			else
-				mergeset[hash] = v
-			end
-		end
-		-- if we get this far, it's all unique
-		local breaker = false
-		return function()
-			if breaker then return end
-			breaker = true
-			for hash, v in pairs(mergeset) do
-				overwrite(v, hash)
-			end
-		end
-	end
-	interface.batch_add = batch_add
+	return self
+end
+interface.mk_generic_raw = mk_generic_raw
 
-	-- batch insert operation where it is not cared about whether some are not inserted.
-	interface.merge = function(values)
-		for _, value in pairs(values) do
-			tryinsert(value, hasher(value))
-		end
-	end
-
-	return interface
+-- currified version to preserve existing API
+local mk_generic = function(hasher)
+	local self = mk_generic_raw(hasher)
+	local curried = curryobject(self, {"add", "remove", "iterator", "batch_add", "merge"})
+	curried.size = function() return self.size end
+	return curried
 end
 interface.mk_generic = mk_generic
 
