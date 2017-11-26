@@ -14,6 +14,8 @@ end
 
 local count_buckets = function(input, bucketfunc)
 	local results={}
+	local bucketed = {}
+	local misc = {}
 	local total = 0
 	local total_with_nobucket = 0
 
@@ -32,10 +34,19 @@ local count_buckets = function(input, bucketfunc)
 			end
 
 			results[bucket] = currentcount
+
+			local btable = bucketed[bucket]
+			if btable == nil then
+				btable = {}
+				bucketed[bucket] = btable
+			end
+			btable[key] = value
+		else
+			misc[key] = value
 		end
 	end
 
-	return results, { count=total, with_nobucket=total_with_nobucket}
+	return results, { count=total, with_nobucket=total_with_nobucket}, bucketed, misc
 end
 stats.count_buckets = count_buckets
 
