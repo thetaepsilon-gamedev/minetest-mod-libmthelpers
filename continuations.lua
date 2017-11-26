@@ -105,7 +105,8 @@ end
 continuations.loop_batch = loop_batch
 
 -- helper over array-like tables, see iterators.lua
-local mkarrayiterator = modhelpers.iterators.mkarrayiterator
+local iterators = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.iterators")
+local mkarrayiterator = iterators.mkarrayiterator
 continuations.loop_batch_array = function(enqueuer, opts, callback, array, maxbatch)
 	local iterator = mkarrayiterator(array)
 	local closure = iterator_continuation(iterator, callback)
