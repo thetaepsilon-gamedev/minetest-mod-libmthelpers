@@ -14,8 +14,7 @@ local dirpathsep = "/"
 modpath = modpath..dirpathsep
 _mod.modpath = modpath
 
-local reg = nil
-if minetest.global_exists("modns") then reg = modns end
+
 
 -- sub-components to register, and their origin files.
 -- note that some components depend on others here,
@@ -60,15 +59,13 @@ for _, entry in ipairs(regtable) do
 
 	local component = dofile(scriptpath)
 	modhelpers[componentname] = component
-	if reg then modns.register(componentbase.."."..componentname, component) end
+	modns.register(componentbase.."."..componentname, component)
 end
 
 -- test usage of the modns parent-namespace helper
 local master = modns.mk_parent_ns_noauto(subs, componentbase, ".")
 modhelpers = master
-if reg then
-	modns.register(componentbase, modhelpers, false)
-end
+modns.register(componentbase, modhelpers, false)
 
 _mod = nil
 _deps = nil
