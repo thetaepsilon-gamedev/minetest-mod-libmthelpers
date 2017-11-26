@@ -6,7 +6,8 @@ local facedir = {}
 -- after sanity checking with the docs,
 -- at least the docs matched the param2 values I got,
 -- so I decided to re-implement this here.
-local rangecheck = modhelpers.check.range
+local check = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.check")
+local rangecheck = check.range
 local param2_facedir_split = function(param2)
 	local caller="param2_facedir_split"
 	-- integercheck(param2, "param2", caller)
