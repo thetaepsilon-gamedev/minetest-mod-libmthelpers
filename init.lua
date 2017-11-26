@@ -1,17 +1,11 @@
-_mod = {}
--- dependencies table for passing in needed objects to sub-modules
-_deps = {}
-
 local modname = minetest.get_current_modname()
 local modpath = minetest.get_modpath(modname)
-minetest.log("info", modname.." initialising at path "..modpath)
 
 local componentbase = "com.github.thetaepsilon.minetest.libmthelpers"
 
 -- FIXME: does this change on non-unixlike targets
 local dirpathsep = "/"
 modpath = modpath..dirpathsep
-_mod.modpath = modpath
 
 
 
@@ -29,7 +23,6 @@ local regtable = {
 	{ "stats" },
 	{ "readonly" },
 	-- this module sits in a subdirectory due to the length of code
-	-- this module has not yet been vetted to be MT-independent.
 	{ "datastructs", nil, true },
 	{ "continuations" },
 	{ "profiling" },
@@ -45,16 +38,11 @@ for _, entry in ipairs(regtable) do
 	scriptname = (scriptname or componentname)
 
 	local scriptpath = ""
-	_mod.moduledir = nil
 	if isdir then
 		local scriptdir = modpath..scriptname..dirpathsep
 		scriptpath = scriptdir.."module.lua"
-		-- temporarily set module subdirectory so script can see it
-		-- why is there not a way to pass arguments to dofile()!?
-		_mod.moduledir = scriptdir
 	else
 		scriptpath = modpath..dirpathsep..scriptname..".lua"
-		_mod.moduledir = modpath
 	end
 
 	local component = dofile(scriptpath)
@@ -64,6 +52,3 @@ end
 -- test usage of the modns parent-namespace helper
 local master = modns.mk_parent_ns_noauto(subs, componentbase, ".")
 modns.register(componentbase, master, false)
-
-_mod = nil
-_deps = nil
