@@ -47,15 +47,28 @@ local nodes_by_modname = function(nodemap)
 end
 stats.nodes_by_modname = nodes_by_modname
 
-local show_nodes_by_modname = function(printer)
-	local results, totals = nodes_by_modname()
+
+
+local show_bucket_counts = function(printer, input, bucketfunc, formatter)
+	if not formatter then formatter = function(k, v) return k..": "..v end end
+
+	local results, totals = count_buckets(input, bucketfunc)
 	for name, value in pairs(results) do
-		printer(name..": "..tostring(value))
+		printer(formatter(name, value))
 	end
-	printer("-- total nodes: "..totals.count)
-	printer("-- total nodes including nodes without a mod: "..totals.with_nobucket)
+	printer("-- total: "..totals.count)
+	printer("-- total including uncategorised: "..totals.with_nobucket)
+end
+stats.show_bucket_counts = show_bucket_counts
+
+
+
+local show_nodes_by_modname = function(printer, nodemap)
+	return show_bucket_counts(printer, nodemap, node_modname, nil)
 end
 stats.show_nodes_by_modname = show_nodes_by_modname
+
+
 
 stats.increment_counter = function(t, countername)
 	local count = t[countername]
