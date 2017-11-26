@@ -12,5 +12,14 @@ Their function is fairly obvious in most cases;
 [use the source luke][1] for it cannot lie.
 Access to the table of functions is performed via [modns][2].
 
+## Why is init.lua empty!?
+[modns][2] handles all loading of this mod.
+See the lib/ directory;
+The lua files beginning with "com.github.thetaepsilon.minetest.libmthelpers"
+represents the mod and their components.
+The above string is also the modns path to load this mod by.
+
+
+
 [1]: https://blog.codinghorror.com/learn-to-read-the-source-luke/
 [2]: https://github.com/thetaepsilon-gamedev/minetest-mod-modns
