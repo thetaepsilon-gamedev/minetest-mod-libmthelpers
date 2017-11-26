@@ -2,8 +2,6 @@ local datastructs = {}
 datastructs.new = {}
 datastructs.selftest = {}
 
-local moduledir = _mod.moduledir
-
 
 
 -- FIFO queue structure
@@ -19,7 +17,7 @@ datastructs.new.mutex = mklock
 
 -- a "set" structure.
 -- allows adding objects, removing them by value, and iterating through them.
-local tsi = dofile(moduledir.."tableset.lua")
+local tsi = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.datastructs.tableset")
 datastructs.tableset = tsi
 
 -- backwards compat aliases...
