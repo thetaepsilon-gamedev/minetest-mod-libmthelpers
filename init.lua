@@ -20,16 +20,19 @@ _mod.modpath = modpath
 -- note that some components depend on others here,
 -- accessed by using the modhelpers global.
 local regtable = {
+	-- except where noted, all of the below are portable and can be loaded outside MT.
 	{ "prettyprint" },
 	{ "iterators" },
 	{ "tableutils" },
 	{ "coords" },
+	-- portable, though stoodnode expects the interface of an objectref.
 	{ "playerpos" },
 	{ "check", "checkers" },	-- filename doesn't fit pattern
 	{ "facedir" },
 	{ "stats" },
 	{ "readonly" },
 	-- this module sits in a subdirectory due to the length of code
+	-- this module has not yet been vetted to be MT-independent.
 	{ "datastructs", nil, true },
 	{ "continuations" },
 	{ "profiling" },
