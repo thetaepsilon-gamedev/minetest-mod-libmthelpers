@@ -1,6 +1,7 @@
 local tableutils = {}
 
-local iterate_once = modhelpers.iterators.iterate_once
+local iterators = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.iterators")
+local iterate_once = iterators.iterate_once
 
 tableutils.filter = function(table, f)
 	local ret = {}
