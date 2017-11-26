@@ -41,8 +41,9 @@ stats.count_buckets = count_buckets
 
 
 
-local nodes_by_modname = function()
-	return count_buckets(minetest.registered_nodes, node_modname)
+local nodes_by_modname = function(nodemap)
+	if type(nodemap) ~= "table" then error("stats nodes_by_modname() expected to be passed registered nodes table") end
+	return count_buckets(nodemap, node_modname)
 end
 stats.nodes_by_modname = nodes_by_modname
 
