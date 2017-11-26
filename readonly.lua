@@ -7,6 +7,6 @@ local readonly = {}
 -- used to be here, now aliased from tableutils for compatibilty
 readonly.shallowcopy = modhelpers.tableutils.shallowcopy
 
-readonly.curry = dofile(_mod.moduledir.."partial_applicatives.lua")
+readonly.curry = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.readonly.curry")
 
 return readonly
