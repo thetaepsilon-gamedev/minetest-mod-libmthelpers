@@ -5,15 +5,10 @@ local mkrefcounter = modhelpers.check.mkrefcounter
 
 local repstr = modhelpers.prettyprint.repstr
 
-local d = function(value, default)
-	if value == nil then
-		value = default
-	end
-	return value
-end
-
+-- used to fallback to the MT API's get_us_time(),
+-- but to enable portable use this has been scrapped.
 local default_timer = function(timerfunc)
-	return d(timerfunc, minetest.get_us_time)
+	if type(timerfunc) ~= "table" then error("profiler requires specifying a timer function!") end
 end
 
 
