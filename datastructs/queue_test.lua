@@ -1,4 +1,4 @@
-local qi = dofile("queue.lua")
+local qi = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.datastructs.queue")
 
 local queue = qi.new()
 assert(queue.size() == 0, "queue should have size zero when new")

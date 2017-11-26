@@ -7,7 +7,7 @@ local moduledir = _mod.moduledir
 
 
 -- FIFO queue structure
-local qi = dofile(moduledir.."queue.lua")
+local qi = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.datastructs.queue")
 datastructs.new.queue = qi.new
 
 -- mutual exclusion lock.
