@@ -12,7 +12,7 @@ datastructs.new.queue = qi.new
 
 -- mutual exclusion lock.
 -- used in the set structures to provide transactional batch add/removes.
-local mklock = dofile(moduledir.."mutex.lua")
+local mklock = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.datastructs.mutex")
 datastructs.new.mutex = mklock
 
 
