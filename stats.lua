@@ -63,12 +63,13 @@ stats.nodes_by_modname = nodes_by_modname
 local show_bucket_counts = function(printer, input, bucketfunc, formatter)
 	if not formatter then formatter = function(k, v) return k..": "..v end end
 
-	local results, totals = count_buckets(input, bucketfunc)
+	local results, totals, bucketed, misc = count_buckets(input, bucketfunc)
 	for name, value in pairs(results) do
 		printer(formatter(name, value))
 	end
 	printer("-- total: "..totals.count)
 	printer("-- total including uncategorised: "..totals.with_nobucket)
+	return results, totals, bucketed, misc
 end
 stats.show_bucket_counts = show_bucket_counts
 
