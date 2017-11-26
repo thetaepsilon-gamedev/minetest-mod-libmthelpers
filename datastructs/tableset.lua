@@ -1,9 +1,13 @@
 local interface = {}
 
-local iterators = _deps.tableset.iterators
-local curryobject = _deps.tableset.curryobject
+local iterators = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.iterators")
+local curry = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.readonly.curry")
+local curryobject = curry.object
 local mk_value_iterator = iterators.mk_value_iterator
-local mkfnexploder = _deps.tableset.mkfnexploder
+
+-- argh, why could I not just "from package import function..."
+local check = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.check")
+local mkfnexploder = check.mkfnexploder
 
 -- generic table which takes a "hash function" to calculate keys.
 -- the hash function is expected to produce a "compare equal" quality:
