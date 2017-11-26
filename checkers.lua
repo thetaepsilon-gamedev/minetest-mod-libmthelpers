@@ -108,7 +108,7 @@ end
 check.listequaltest = listequal
 
 check.selftest.listequal = function()
-	local name = "modhelpers.check.selftest.listequal()"
+	local name = "libmthelpers.check.selftest.listequal()"
 	local assert = check.mkassert(name)
 
 	assert(listequal({}, {}), "null lists should compare equal")

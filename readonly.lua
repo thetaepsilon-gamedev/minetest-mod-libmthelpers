@@ -1,4 +1,4 @@
--- modhelpers.readonly: defensive copying of objects to prevent modifications to shared objects.
+-- libmthelpers.readonly: defensive copying of objects to prevent modifications to shared objects.
 -- use to clone "template objects" (such as tables of helper functions),
 -- so that users of the cloned table cannot modify a shared instance of the table and therefore affect other users.
 
