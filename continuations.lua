@@ -44,12 +44,9 @@ local loop_repeat = function(enqueuer, closure, opts)
 end
 continuations.event_loop_repeat = loop_repeat
 
--- enqueue wrapper and helper utilising the MT api's minetest.after routine
-local mt = function(delay, callback) minetest.after(delay, callback) end
-continuations.minetest_enqueuer = mt
-continuations.minetest_loop_repeat = function(closure, opts)
-	loop_repeat(mt, closure, opts)
-end
+-- For an example of an enqueuer, see minetest.after.
+-- that function already directly matches the required signature,
+-- and enqueues callbacks to occur on return to the MT core event loop.
 
 
 
