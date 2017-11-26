@@ -5,7 +5,8 @@
 local readonly = {}
 
 -- used to be here, now aliased from tableutils for compatibilty
-readonly.shallowcopy = modhelpers.tableutils.shallowcopy
+local tableutils = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.tableutils")
+readonly.shallowcopy = tableutils.shallowcopy
 
 readonly.curry = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.readonly.curry")
 
