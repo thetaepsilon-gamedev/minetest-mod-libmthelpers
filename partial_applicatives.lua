@@ -1,6 +1,8 @@
 -- yes, I *know* calling partial application "currying" is incorrect...
 local curry = {}
-local mkfnexploder = _deps.curry.mkfnexploder
+
+local check = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.check")
+local mkfnexploder = check.mkfnexploder
 
 -- partially applies the "self" object of a table method function into a closure.
 -- that is, f(self, a, ...) becomes g(a, ...) and "self" is captured by closure scope of the function.
