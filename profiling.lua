@@ -1,9 +1,11 @@
 local interface = {}
 
-local mkfnexploder = modhelpers.check.mkfnexploder
-local mkrefcounter = modhelpers.check.mkrefcounter
+local check = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.check")
+local mkfnexploder = check.mkfnexploder
+local mkrefcounter = check.mkrefcounter
 
-local repstr = modhelpers.prettyprint.repstr
+local prettyprint = mtrequire("com.github.thetaepsilon.minetest.libmthelpers.prettyprint")
+local repstr = prettyprint.repstr
 
 -- used to fallback to the MT API's get_us_time(),
 -- but to enable portable use this has been scrapped.
