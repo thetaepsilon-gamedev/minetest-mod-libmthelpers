@@ -36,8 +36,11 @@ local regtable = {
 	{ "profiling" },
 }
 
+-- see below: a plain list of just component names
+local subs = {}
 for _, entry in ipairs(regtable) do
 	local componentname = entry[1]
+	table.insert(subs, componentname)
 	local scriptname = entry[2]
 	local isdir = entry[3]
 	scriptname = (scriptname or componentname)
@@ -59,6 +62,10 @@ for _, entry in ipairs(regtable) do
 	modhelpers[componentname] = component
 	if reg then modns.register(componentbase.."."..componentname, component) end
 end
+
+-- test usage of the modns parent-namespace helper
+local master = modns.mk_parent_ns_noauto(subs, componentbase, ".")
+modhelpers = master
 if reg then
 	modns.register(componentbase, modhelpers, false)
 end
