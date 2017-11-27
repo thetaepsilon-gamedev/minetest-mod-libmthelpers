@@ -105,4 +105,18 @@ prettyprint.format_multiline = function(obj, label, recurselimit)
 	return formatobj(obj, label, recurselimit, true, "    ")
 end
 
+
+
+-- visual representation of a passed object.
+local format_value = function(v)
+	if type(v) == "string" then
+		return string.format("%q", v)
+	else
+		return tostring(v)
+	end
+end
+prettyprint.format_value = format_value
+
+
+
 return prettyprint
