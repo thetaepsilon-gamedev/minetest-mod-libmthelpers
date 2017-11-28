@@ -1,5 +1,6 @@
 -- except where noted, all of the below are portable and can be loaded outside MT.
 local components = {
+	"varargs",
 	"prettyprint",
 	"iterators",
 	"tableutils",
