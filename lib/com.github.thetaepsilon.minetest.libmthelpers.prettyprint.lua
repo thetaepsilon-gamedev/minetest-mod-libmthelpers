@@ -117,6 +117,30 @@ local format_value = function(v)
 end
 prettyprint.format_value = format_value
 
+-- varargs print formatting:
+-- prints out all passed values in a visually distinct way with sep cat'd between them.
+local function vsfmt_r(sep, v, ...)
+	local result = format_value(v)
+	if select("#", ...) > 0 then
+		result = result..sep..vsfmt_r(sep, ...)
+	end
+	return result
+end
+local vsfmt = function(sep, ...)
+	if select("#", ...) > 0 then
+		return vsfmt_r(sep, ...)
+	else
+		return ""
+	end
+end
+prettyprint.vsfmt = vsfmt
+
+-- sane default separator.
+-- the MT console unfortunately doesn't do tabs correctly...
+-- so a fixed-size whitespace will have to do.
+local tab = "        "
+prettyprint.vfmt = function(...) return vsfmt(tab, ...) end
+
 
 
 return prettyprint
