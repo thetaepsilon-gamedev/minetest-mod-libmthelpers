@@ -14,10 +14,17 @@ Access to the table of functions is performed via [modns][2].
 
 ## Why is init.lua empty!?
 [modns][2] handles all loading of this mod.
-See the lib/ directory;
-The lua files beginning with "com.github.thetaepsilon.minetest.libmthelpers"
-represents the mod and their components.
-The above string is also the modns path to load this mod by.
+See the lib/com/github/thetaepsilon/minetest directory;
+The file "libmthelpers.lua" serves as the top-level package interface,
+and the files within the libmthelpers/ directory and sub-directories are the sub-packages.
+modns exports the mtrequire() function in global scope;
+this library resolves to "com.github.thetaepsilon.minetest.libmthelpers",
+and it's modules as "\*snip\*.libmthelpers.submodulename".
+To access this library, it is sufficient to do something like
+
+```
+local libmthelpers = mtrequire(libpath)
+```
 
 
 
